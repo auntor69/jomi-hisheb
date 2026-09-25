@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  /* Jomi Hisheb design tokens — MASTERPLAN §7 (indigo-blue palette per owner decision) */
+  --color-primary: #2b4c9b;
+  --color-primary-hover: #24418a;
+  --color-primary-foreground: #f7f5ef;
+  --color-background: #faf9f4;
+  --color-card: #ffffff;
+  --color-card-foreground: #1c2321;
+  --color-foreground: #1c2321;
+  --color-muted-foreground: #5d5d5a;
+  --color-border: #e4e1d6;
+  --color-success: #2b4c9b;
+  --color-destructive: #b3261e;
+  --color-ring: #2b4c9b;
+
+  --radius-card: 0.75rem;
+  --radius-control: 0.5rem;
+  --radius-chip: 9999px;
+
+  --font-sans:
+    "Noto Sans", "Noto Sans Bengali", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Bengali UI", sans-serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Bengali script needs a touch more leading for conjuncts (MASTERPLAN §11) */
+html[lang="bn"] body {
+  line-height: 1.6;
+}
+
+html[lang="en"] body {
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* All motion gated behind reduced-motion preference (MASTERPLAN §7) */
+@media (prefers-reduced-motion: no-preference) {
+  button,
+  select,
+  input,
+  [role="button"] {
+    transition:
+      background-color 150ms ease-out,
+      border-color 150ms ease-out,
+      color 150ms ease-out,
+      transform 150ms ease-out;
+  }
+}
