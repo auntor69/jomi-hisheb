@@ -1,6 +1,6 @@
 # Jomi Hisheb (জমির হিসাব) — Masterplan
 
-**Version:** 1.0 · **Status:** Approved for implementation pending owner sign-off · **Date:** 2026-09-25
+**Version:** 1.1 · **Status:** Approved for implementation pending owner sign-off · **Date:** 2026-09-25 (v1.1: factor verification audit, indigo-blue palette per owner, mobile input specifics)
 
 A fast, accurate, accessible land-unit converter for Bangladesh. One page, one input, instant results. No backend, no database, no accounts, no ads.
 
@@ -56,6 +56,12 @@ All factors are defined **once** in `src/data/units.ts`. Values are per **1 unit
 **Consistency invariants** (asserted by tests, §17): `bigha = 20 × katha`, `acre = 100 × decimal`, `shotangsho ≡ decimal`, `acre = 43,560 sq ft`.
 
 **Regional variation:** The UI must state (converter footnote + FAQ) that katha/bigha differ by region and history (e.g., in parts of India/West Bengal a katha may be ~720 sq ft in Bangladesh but other values elsewhere; in Bihar/Nepal historically different). We ship **one** profile: Bangladesh standard. No hidden overrides.
+
+**Verification audit (2026-09-25, owner-requested):** The factors above were re-checked against independent sources and are **correct for the Bangladesh convention**:
+
+- Wikipedia, *Katha (unit)*: "In Bangladesh, one katha is standardized to 720 square feet (67 m²), and 20 katha equals 1 bigha"; 1 bigha = 14,400 sq ft ≈ 1,338 m².
+- Bangladesh land-law references (legalseba.com, programmerhasan.com, landmeasurementbd.in): 1 decimal (shotangsho/shotok/শতক) = 435.6 sq ft = exactly 1/100 acre; 1 acre = 100 decimal = 43,560 sq ft.
+- Known confusion to avoid: some Indian calculators quote 1 katha = **1,361.25 sq ft** — that is the **Bihar** standard, not Bangladesh's. Do not use it here; disclose regional variation instead.
 
 ---
 
@@ -241,24 +247,26 @@ Icon buttons get `aria-label` in the active language; copy button has visible te
 
 ## 7. Design System (Tokens & Theme)
 
-### Palette (land-inspired, calm)
+### Palette (calm, trustworthy)
+
+**Owner decision (2026-09-25): no green.** Primary is a deep indigo-blue (works for land/trust, has no agricultural connotation), on the warm off-white surfaces below.
 
 CSS custom properties in `src/index.css` (Tailwind v4 `@theme` if the template uses v4 — check `tailwind.config` presence; adapt syntax accordingly):
 
 | Token | Value (light) | Usage |
 |---|---|---|
-| `--primary` | `#1F5132` (deep forest green) | brand, primary buttons, focus rings |
+| `--primary` | `#2B4C9B` (deep indigo-blue, dark-mode `#7A96E8`) | brand, primary buttons, focus rings |
 | `--primary-foreground` | `#F7F5EF` | text on primary |
 | `--background` | `#FAF9F4` (warm off-white) | page bg |
 | `--card` | `#FFFFFF` | converter card, sections |
 | `--card-foreground` | `#1C2321` (deep charcoal) | main text |
-| `--muted-foreground` | `#5C6B60` (muted gray-green) | secondary text, labels |
+| `--muted-foreground` | `#5D5D5A` (neutral warm gray) | secondary text, labels |
 | `--border` | `#E4E1D6` (subtle warm gray) | card/section borders |
-| `--success` | `#1A7A3C` | copied confirmation |
+| `--success` | `#2B4C9B` (uses primary — no green anywhere per owner) | copied confirmation |
 | `--destructive` | `#B3261E` | validation errors (AA on white) |
-| `--ring` | `#1F5132` | focus rings |
+| `--ring` | `#2B4C9B` | focus rings |
 
-Contrast checks (target WCAG AA): `#1C2321` on `#FAF9F4` ≈ 14.9:1; `#5C6B60` on `#FFFFFF` ≈ 5.6:1; `#B3261E` on `#FFFFFF` ≈ 5.9:1. All pass.
+Contrast checks (target WCAG AA): `#1C2321` on `#FAF9F4` ≈ 14.9:1; `#5D5D5A` on `#FFFFFF` ≈ 6.0:1; `#B3261E` on `#FFFFFF` ≈ 5.9:1; `#2B4C9B` on `#FFFFFF` ≈ 7.4:1. All pass.
 
 ### Typography
 
@@ -283,6 +291,7 @@ Contrast checks (target WCAG AA): `#1C2321` on `#FAF9F4` ≈ 14.9:1; `#5C6B60` o
 - **Tablet/desktop (≥768px):** content stays `max-w-2xl` centered; converter rows get more breathing room; quick chips wrap to one row; no layout shift.
 - **No horizontal overflow** at any width down to 320px. The result uses `tabular-nums` and a responsive font size; for extremely long outputs (e.g. 999,999,999,999 with grouping), the result element alone may scroll horizontally — the page itself never does.
 - One-hand use: all primary controls within thumb reach in the top 2/3 of the viewport on mobile.
+- **Mobile input specifics:** input font ≥16px (ours is 30px) so iOS Safari never auto-zooms on focus; `inputMode="decimal"` raises the numeric keypad on phones; every action works by tap alone — no hover-dependent affordances; safe-area padding for notched phones (`viewport-fit=cover` + `env(safe-area-inset-*)`).
 
 ---
 
@@ -350,7 +359,7 @@ Full bilingual support **is in scope** (it's cheap once strings are centralized)
 - Fonts: one Google Fonts request with `display=swap`; system fallback stack prevents blocking.
 - **No layout shift:** reserved error line (§6), fixed-height card sections, `font-display: swap`, explicit favicon/theme-color. Long results: responsive font size + `tabular-nums`.
 - Target Lighthouse (prod build): Performance ≥95, Accessibility ≥95, Best Practices ≥95, SEO ≥95. Document limitations (external font request is the main one; self-hosting fonts is the fallback if score suffers).
-- Bundle: route-level code-splitting unnecessary (single page); keep `index.html` lean; shadcn components imported on-demand (tree-shaken).
+- Bundle: route-level code-splitting unnecessary (single page); keep `index.html` lean; shadcn components imported on-demand (tree-shaken). Expected bundle ≈ **50–70 KB gzipped total** (React DOM ≈ 40 KB + app code) — comfortably within budget.
 
 ---
 
@@ -363,7 +372,7 @@ Full bilingual support **is in scope** (it's cheap once strings are centralized)
 - Canonical: `https://jomi-hisheb.example.com/` **placeholder documented in README** — replace when domain is real. (Do not invent a real-looking domain.)
 - Open Graph: `og:title`, `og:description`, `og:type=website`, `og:url`, `og:image` (1200×630 PNG, brand card), `og:locale=en_US` + `og:locale:alternate=bn_BD`.
 - Twitter card `summary_large_image`.
-- `<meta name="theme-color" content="#1F5132">`, favicon SVG + fallback ICO/PNG.
+- `<meta name="theme-color" content="#2B4C9B">`, favicon SVG + fallback ICO/PNG.
 - `<html lang="bn">` static default (matches default UI language); updated client-side on toggle.
 
 ### Technical
@@ -445,7 +454,7 @@ Vitest + React Testing Library (`@testing-library/react`, already typical in tem
 
 - `bun tsc -b --noEmit` clean.
 - `bun vitest run` all green.
-- Production build (`vite build`) succeeds; inspect `dist/` size (< 200KB gzipped JS budget; realistically ~150KB with React — acceptable, documented).
+- Production build (`vite build`) succeeds; inspect `dist/` size (< 200KB gzipped JS budget; realistically ~50–70KB gzipped with React — well within budget, documented).
 - Responsive smoke test at 320, 375, 768, 1280 widths.
 - Lighthouse run on prod build if tooling available; document results.
 
@@ -536,6 +545,8 @@ Vitest + React Testing Library (`@testing-library/react`, already typical in tem
 | 9 | No Framer Motion / i18n lib / state lib | CSS transitions + 1-file string map + useState suffice; fewer deps |
 | 10 | 500ms debounce only on URL writes | Math never debounced; history spam avoided |
 | 11 | localStorage for language only | First-party preference, not tracking; documented honestly |
+| 12 | Primary color: deep indigo-blue `#2B4C9B`; no green anywhere | Owner decision 2026-09-25; blue reads calm/trustworthy, AA contrast verified |
+| 13 | Conversion factors verified against sources (2026-09-25) | Wikipedia + BD land-law references confirm 720 / 14,400 / 435.6 / 43,560 sq ft; Bihar's 1,361.25 katha explicitly rejected |
 
 ---
 
