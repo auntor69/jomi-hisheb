@@ -4,7 +4,7 @@ A fast, accurate, mobile-first **Bangladeshi land-unit converter**. One page, on
 
 ## Features
 
-- Convert instantly between **7 units**: Katha (কাঠা), Bigha (বিঘা), Shotangsho (শতাংশ), Decimal (ডেসিমেল), Square Feet (বর্গফুট), Square Meters (বর্গমিটার), Acre (একর)
+- Convert instantly between **11 units**: Katha (কাঠা), Bigha (বিঘা), Chotak (ছটাক), Shotangsho (শতাংশ), Decimal (ডেসিমেল), Gonda (গন্ডা), Kani 20-Gonda (কানি), Kani 40-Shotok (কানি), Square Feet (বর্গফুট), Square Meters (বর্গমিটার), Acre (একর)
 - Full **English / বাংলা** interface toggle (default: Bengali)
 - Swap units, copy result, quick-conversion shortcuts, shareable URLs (`?from=katha&to=decimal&value=5`)
 - Input validation (negatives, invalid numbers, overflow) with accessible, non-intrusive messages
@@ -18,9 +18,15 @@ A fast, accurate, mobile-first **Bangladeshi land-unit converter**. One page, on
 | Square Meter | বর্গমিটার | 10.7639104167 |
 | Katha | কাঠা | 720 |
 | Bigha | বিঘা | 14,400 (= 20 katha) |
+| Chotak | ছটাক | 45 (= katha / 16) |
 | Shotangsho | শতাংশ | 435.6 |
 | Decimal | ডেসিমেল | 435.6 |
+| Gonda | গন্ডা | 864 |
+| Kani (20 Gonda) | কানি | 17,280 (= 20 gonda, 8-hat-nol system) |
+| Kani (40 Shotok) | কানি | 17,424 (= 40 decimal) |
 | Acre | একর | 43,560 (= 100 decimal) |
+
+> **Two Kani standards.** Bangladesh uses both the '20 Gonda' kani (17,280 sq ft, the 8-hat-nol traditional system) and the '40 Shotok' kani (17,424 sq ft, ≈0.8% larger). This tool ships them as **separate units** — pick the one your deed or local practice uses.
 
 > **Regional disclosure:** katha and bigha have different sizes in other regions and historical records (e.g. some Indian calculators use 1 katha = 1,361.25 sq ft — the Bihar standard). This tool uses the **Bangladesh convention** only.
 >

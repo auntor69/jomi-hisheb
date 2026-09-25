@@ -13,7 +13,7 @@ export const STRINGS = {
     brandBn: "জমির হিসাব",
     title: "Jomi Hisheb — Bangladesh Land Unit Converter",
     subtitle:
-      "Convert katha, bigha, shotangsho, decimal, acre, square feet and square meters instantly.",
+      "Convert katha, bigha, chotak, shotangsho, decimal, gonda, kani, acre, square feet and square meters instantly.",
     inputLabel: "Value",
     fromUnitLabel: "From unit",
     toUnitLabel: "To unit",
@@ -34,7 +34,9 @@ export const STRINGS = {
     aboutP2:
       "Shotangsho (also called shotok) and decimal are the same unit: 1 decimal = 435.6 square feet = exactly one hundredth of an acre. So 1 acre = 100 decimal.",
     aboutP3:
-      "Square meters use the international standard: 1 m² = 10.7639104167 sq ft. Regional note: katha and bigha have different sizes in other regions and historical records — this tool uses the Bangladesh standard.",
+      "Square meters use the international standard: 1 m² = 10.7639104167 sq ft.",
+    aboutP4:
+      "Kani comes in two standards: the '20 Gonda' Kani = 17,280 sq ft (1 gonda = 864 sq ft), and the '40 Shotok' Kani = 17,424 sq ft. Also: 1 chotak = 45 sq ft (16 per katha). Regional note: katha and bigha vary outside Bangladesh — this tool uses the Bangladesh standard.",
     faqTitle: "FAQ",
     faq1q: "Are these values official for Bangladesh?",
     faq1a: "They follow the commonly used Bangladesh convention. Actual deeds and surveys should always be checked against official documents.",
@@ -46,6 +48,8 @@ export const STRINGS = {
     faq4a: "No. This is a calculator aid. It does not determine legal ownership, cadastral boundaries, or official survey measurements.",
     faq5q: "Does anything I type get sent anywhere?",
     faq5a: "No. All conversion happens in your browser. Nothing is sent to any server, and there are no ads or trackers.",
+    faq6q: "Which Kani does this use?",
+    faq6a: "Bangladesh uses two Kani standards. The '20 Gonda' Kani (8-hat-nol system) is 17,280 sq ft; the '40 Shotok' Kani is 17,424 sq ft (about 0.8% larger). This tool offers both as separate units — pick the one your deed or local practice uses.",
     footerDisclaimer:
       "Uses the Bangladesh land-unit convention. Not a legal survey tool.",
     footerTag: "Built for Bangladesh · No ads · No tracking",
@@ -56,7 +60,7 @@ export const STRINGS = {
     brandBn: "জমির হিসাব",
     title: "জমির হিসাব — জমির পরিমাপ রূপান্তরক",
     subtitle:
-      "কাঠা, বিঘা, শতাংশ, ডেসিমেল, একর, বর্গফুট ও বর্গমিটার — সাথে সাথে রূপান্তর করুন।",
+      "কাঠা, বিঘা, ছটাক, শতাংশ, ডেসিমেল, গন্ডা, কানি, একর, বর্গফুট ও বর্গমিটার — সাথে সাথে রূপান্তর করুন।",
     inputLabel: "মান",
     fromUnitLabel: "যে একক থেকে",
     toUnitLabel: "যে এককে",
@@ -77,7 +81,9 @@ export const STRINGS = {
     aboutP2:
       "শতাংশ (শতক) ও ডেসিমেল একই একক: ১ ডেসিমেল = ৪৩৫.৬ বর্গফুট = ঠিক এক একরের শতভাগের একভাগ। অর্থাৎ ১ একর = ১০০ ডেসিমেল।",
     aboutP3:
-      "বর্গমিটার আন্তর্জাতিক মান অনুযায়ী: ১ বর্গমিটার = ১০.৭৬৩৯১০৪১৬৭ বর্গফুট। বিভিন্ন অঞ্চলে কাঠা ও বিঘার মান ভিন্ন হতে পারে — এখানে বাংলাদেশের প্রচলিত মান ব্যবহৃত হয়েছে।",
+      "বর্গমিটার আন্তর্জাতিক মান অনুযায়ী: ১ বর্গমিটার = ১০.৭৬৩৯১০৪১৬৭ বর্গফুট।",
+    aboutP4:
+      "কানির দুটি মান প্রচলিত: '২০ গন্ডা' কানি = ১৭,২৮০ বর্গফুট (১ গন্ডা = ৮৬৪ বর্গফুট); '৪০ শতাংশ' কানি = ১৭,৪২৪ বর্গফুট। এছাড়া ১ ছটাক = ৪৫ বর্গফুট (১ কাঠায় ১৬টি)। বিভিন্ন অঞ্চলে কাঠা ও বিঘার মান ভিন্ন হতে পারে — এখানে বাংলাদেশের প্রচলিত মান ব্যবহৃত হয়েছে।",
     faqTitle: "সাধারণ জিজ্ঞাসা",
     faq1q: "এই মানগুলো কি বাংলাদেশের জন্য সরকারি?",
     faq1a: "এগুলো বাংলাদেশে প্রচলিত মান অনুযায়ী। দলিল বা জরিপের ক্ষেত্রে সরকারি কাগজের সঙ্গে মিলিয়ে দেখুন।",
@@ -89,6 +95,8 @@ export const STRINGS = {
     faq4a: "না। এটি কেবল হিসাবের সহায়ক। এটি দিয়ে মালিকানা, দাগ নম্বর বা সরকারি জরিপ নির্ধারণ করা যায় না।",
     faq5q: "আমি যা লিখি তা কি কোথাও পাঠানো হয়?",
     faq5a: "না। সব হিসাব আপনার ব্রাউজারেই হয়। কোনো সার্ভারে কিছু পাঠানো হয় না; বিজ্ঞাপন বা ট্র্যাকিংও নেই।",
+    faq6q: "এখানে কোন কানি ব্যবহৃত হয়?",
+    faq6a: "বাংলাদেশে কানির দুটি প্রচলিত মান আছে। '২০ গন্ডা' কানি (আট-হাত নল) = ১৭,২৮০ বর্গফুট; '৪০ শতাংশ' কানি = ১৭,৪২৪ বর্গফুট (প্রায় ০.৮% বড়)। দুটোই আলাদা একক হিসেবে দেওয়া আছে — দলিল বা স্থানীয় প্রথা অনুযায়ী বেছে নিন।",
     footerDisclaimer: "বাংলাদেশের প্রচলিত জমি একক অনুযায়ী। এটি আইনি জরিপ যন্ত্র নয়।",
     footerTag: "বাংলাদেশের জন্য নির্মিত · বিজ্ঞাপন নেই · ট্র্যাকিং নেই",
     langLabel: "ভাষা",
