@@ -3,6 +3,15 @@
  * Instant per-keystroke conversion (no debounce on math), swap preserves
  * input, reserved error line prevents layout shift, copy with feedback,
  * debounced URL sync.
+ *
+ * Layout notes (screenshot-critique fix):
+ * - Rows use a two-column grid `grid-cols-[minmax(0,1fr)_auto]`: the value
+ *   field always gets the flexible share of width and the select takes only
+ *   what its content needs. Below 380px rows stack full-width.
+ * - Input, output, and selects share one height (h-16) so rows align.
+ * - The result never truncates: no `truncate`; `min-w-0` + `break-words`
+ *   handle long values gracefully instead of clipping them.
+ * - Copy sits inside the result box, right-aligned — integrated, not floating.
  */
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpDown, Check, Copy, AlertCircle } from "lucide-react";
@@ -104,16 +113,16 @@ export default function ConverterCard({
   return (
     <section
       aria-labelledby="converter-heading"
-      className="rounded-xl border border-border bg-card p-5 shadow-sm sm:p-6"
+      className="rounded-xl border border-border bg-card p-4 shadow-sm sm:p-6"
     >
       <h2 id="converter-heading" className="sr-only">
         {t("resultLabel")} — {t("inputLabel")}
       </h2>
 
-      {/* Source row — stacks below ~380px so the input keeps usable width
-          (documented responsive fallback, MASTERPLAN §8) */}
-      <div className="flex flex-col items-stretch gap-2 min-[380px]:flex-row min-[380px]:items-center min-[380px]:gap-3">
-        <div className="min-w-0 flex-1">
+      {/* Source row — value field flexes, select takes only its content width.
+          Stacks below 380px (documented responsive fallback, MASTERPLAN §8). */}
+      <div className="flex flex-col items-stretch gap-2 min-[380px]:grid min-[380px]:grid-cols-[minmax(0,1fr)_auto] min-[380px]:items-center min-[380px]:gap-3">
+        <div className="min-w-0">
           <label htmlFor="area-input" className="sr-only">
             {t("inputLabel")}
           </label>
@@ -137,7 +146,7 @@ export default function ConverterCard({
           onChange={(u) => onUnitsChange(u, to)}
         />
       </div>
-      <p className="mt-1 h-5 text-xs text-muted-foreground">{captionOf(fromUnit)}</p>
+      <p className="mt-1.5 min-h-5 text-xs text-muted-foreground">{captionOf(fromUnit)}</p>
 
       {/* Swap button */}
       <div className="relative flex justify-center py-1">
@@ -152,22 +161,42 @@ export default function ConverterCard({
         </button>
       </div>
 
-      {/* Result row — same stacking behavior as the source row */}
-      <div className="flex flex-col items-stretch gap-2 min-[380px]:flex-row min-[380px]:items-center min-[380px]:gap-3">
+      {/* Result row — same grid as the source row so both align */}
+      <div className="flex flex-col items-stretch gap-2 min-[380px]:grid min-[380px]:grid-cols-[minmax(0,1fr)_auto] min-[380px]:items-center min-[380px]:gap-3">
         {/* <output> below has an implicit role="status" — keep a single live region
-            so screen readers announce the result exactly once. */}
-        <div className="min-w-0 flex-1" aria-live="polite">
+            so screen readers announce the result exactly once. No `truncate`:
+            clipping real results is worse than wrapping them. */}
+        <div className="min-w-0" aria-live="polite">
           <span aria-hidden="true" className="sr-only">
             {t("resultLabel")}:{" "}
           </span>
-          <output
-            htmlFor="area-input"
-            className={`block h-16 truncate rounded-lg border border-border bg-background px-4 text-3xl font-semibold tabular-nums leading-[3.5rem] ${
+          <div
+            className={`flex h-16 w-full min-w-0 items-center justify-between rounded-lg border border-border bg-background px-4 text-3xl font-semibold tabular-nums ${
               resultText !== null ? "text-primary" : "text-muted-foreground/50"
             }`}
           >
-            {resultText ?? t("resultPlaceholder")}
-          </output>
+            <output
+              htmlFor="area-input"
+              className="min-w-0 break-words leading-tight"
+            >
+              {resultText ?? t("resultPlaceholder")}
+            </output>
+            <button
+              type="button"
+              onClick={copyResult}
+              disabled={resultText === null}
+              aria-label={
+                copied === "ok" ? t("copied") : copied === "fail" ? t("copyFailed") : t("copy")
+              }
+              className="-mr-1 ml-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-card hover:text-card-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {copied === "ok" ? (
+                <Check className="h-5 w-5 text-primary" aria-hidden="true" />
+              ) : (
+                <Copy className="h-5 w-5" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </div>
         <UnitSelect
           id="to-unit"
@@ -176,33 +205,23 @@ export default function ConverterCard({
           onChange={(u) => onUnitsChange(from, u)}
         />
       </div>
-      <div className="mt-1 flex h-5 items-center justify-between">
+      <div className="mt-1.5 flex min-h-5 items-start justify-between gap-2">
         <p className="text-xs text-muted-foreground">{captionOf(toUnit)}</p>
-        <button
-          type="button"
-          onClick={copyResult}
-          disabled={resultText === null}
-          aria-label={
-            copied === "ok" ? t("copied") : copied === "fail" ? t("copyFailed") : t("copy")
-          }
-          className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-3 text-sm font-medium text-card-foreground hover:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {copied === "ok" ? (
-            <Check className="h-4 w-4 text-primary" aria-hidden="true" />
-          ) : (
-            <Copy className="h-4 w-4" aria-hidden="true" />
-          )}
-          <span aria-live="polite">
-            {copied === "ok" ? t("copied") : copied === "fail" ? t("copyFailed") : t("copy")}
-          </span>
-        </button>
+        {copied !== "idle" && (
+          <p
+            className="text-xs font-medium text-primary"
+            aria-hidden="true"
+          >
+            {copied === "ok" ? t("copied") : t("copyFailed")}
+          </p>
+        )}
       </div>
 
       {/* Reserved 20px error line — no layout shift (MASTERPLAN §6) */}
       <p
         id="input-error"
         role="alert"
-        className={`mt-1 flex h-5 items-center gap-1 text-sm text-destructive ${
+        className={`mt-1 flex min-h-5 items-center gap-1 text-sm text-destructive ${
           errorKey === null ? "invisible" : ""
         }`}
       >
