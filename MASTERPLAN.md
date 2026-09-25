@@ -495,6 +495,22 @@ Vitest + React Testing Library (`@testing-library/react`, already typical in tem
 - [x] Masterplan written and committed as the first substantive commit.
 - [x] No application code written yet, per Phase Zero instructions.
 
+### Milestones
+
+- [x] **Phase 1 — Foundation** (merged via PR #1): Vite+React+TS+Tailwind scaffold, indigo-blue tokens, SEO metadata, fonts, favicon, CI.
+- [x] **Phase 2 — Conversion engine** (merged via PR #1): units registry, convert/validate/format, 53-test suite (49-pair matrix, round-trips, invariants, edge cases).
+- [x] **Phase 3 — Main interface**: header + language toggle, converter card (instant result, unit selects, swap, copy with feedback, reserved error line), controlled unit state shared with quick conversions.
+- [x] **Phase 4 — Supporting content**: 8 quick-conversion chips (value-preserving, active state), About units, 5-item FAQ (native `<details>`), footer; full EN/BN toggle across all strings with `<html lang>` sync.
+- [x] **Phase 6 — SEO & perf extras**: JSON-LD `WebApplication` schema, static no-JS content in `index.html`, `robots.txt`, `sitemap.xml`, styled `404.html`.
+- [x] **Phase 7 — QA**: 71/71 tests, strict typecheck, production build (77 KB gz JS, 281 KB dist), preview verified (HTTP 200, content present, param URLs OK).
+- [x] **Phase 8 — Delivery**: README rewritten (standards, run/test/build/deploy, data handling); milestones recorded here.
+
+**Implementation deviations from plan (all documented inline):**
+
+- Converter unit state is owned by `App` (controlled props) rather than `ConverterCard` alone, so quick-conversion chips can set units without lifting input state. Input text remains card-internal per §6.
+- `share.ts` tracks `hasParams` so the URL stays clean on default state but keeps non-default params on load.
+- Share-test uses stubbed `history`/`location` globals instead of adding the `jsdom` dependency (keeps deps minimal per §13).
+
 ---
 
 ## 20. Acceptance Criteria (Final Checklist)
