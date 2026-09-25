@@ -29,9 +29,39 @@
     <meta property="og:locale:alternate" content="bn_BD" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Jomi Hisheb – জমির হিসাব | Land Unit Converter Bangladesh</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Jomi Hisheb (জমির হিসাব)",
+        "alternateName": "জমির হিসাব",
+        "description": "Convert katha, bigha, shotangsho, decimal, acre, square feet and square meters instantly. Free, accurate Bangladeshi land measurement converter.",
+        "url": "https://jomi-hisheb.example.com/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "inLanguage": ["bn", "en"],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Static fallback content: crawlable/meaningful without JS (MASTERPLAN §14). React replaces this on mount. -->
+      <main style="max-width: 672px; margin: 0 auto; padding: 24px 16px; font-family: 'Noto Sans Bengali', 'Noto Sans', ui-sans-serif, system-ui, sans-serif;">
+        <h1 style="font-size: 24px; color: #1c2321;">জমির হিসাব — জমির পরিমাপ রূপান্তরক</h1>
+        <p style="font-size: 14px; color: #5d5d5a; line-height: 1.6;">
+          কাঠা, বিঘা, শতাংশ, ডেসিমেল, একর, বর্গফুট ও বর্গমিটার — সাথে সাথে রূপান্তর করুন। Jomi Hisheb is a free, instant Bangladesh land-unit converter: katha, bigha, shotangsho, decimal, acre, square feet and square meters.
+        </p>
+        <p style="font-size: 14px; color: #5d5d5a; line-height: 1.6;">
+          বাংলাদেশের প্রচলিত মান: ১ কাঠা = ৭২০ বর্গফুট · ২০ কাঠা = ১ বিঘা = ১৪,৪০০ বর্গফুট · ১ শতাংশ (ডেসিমেল) = ৪৩৫.৬ বর্গফুট · ১ একর = ১০০ ডেসিমেল = ৪৩,৫৬০ বর্গফুট। Standard values used: 1 katha = 720 sq ft · 1 bigha = 20 katha = 14,400 sq ft · 1 shotangsho = 1 decimal = 435.6 sq ft · 1 acre = 43,560 sq ft. Katha and bigha vary by region — this tool follows the Bangladesh convention and is not a legal survey tool.
+        </p>
+        <noscript>এই রূপান্তরক ব্যবহার করতে জাভাস্ক্রিপ্ট চালু করুন। Please enable JavaScript to use the interactive converter.</noscript>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
