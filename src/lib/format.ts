@@ -5,7 +5,7 @@
  * from formatted strings.
  */
 
-import type { UnitId } from "../data/units.ts";
+import { UNITS, type UnitId } from "../data/units.ts";
 
 /**
  * Display precision by magnitude (MASTERPLAN §4):
@@ -48,21 +48,14 @@ export function formatNumber(n: number): string {
   return nf.format(n);
 }
 
-/** Unit names for copy text; kept here to avoid a UI-framework dependency. */
-const UNIT_LABELS: Record<UnitId, string> = {
-  sqft: "Square Feet",
-  sqm: "Square Meters",
-  katha: "Katha",
-  bigha: "Bigha",
-  shotangsho: "Shotangsho",
-  decimal: "Decimal",
-  acre: "Acre",
-};
+/** Unit names for copy text come straight from the registry (single source
+ *  of truth — e.g. "Kani (20 Gonda)" stays unambiguous in copied text). */
+const unitLabel = (id: UnitId): string => UNITS[id].en;
 
 /**
  * Full copy-to-clipboard string, e.g. "5 Katha = 8.26 Decimal".
  * (MASTERPLAN §10: format reflects the actual calculated result and display precision.)
  */
 export function formatCopyText(value: number, from: UnitId, to: UnitId, result: number): string {
-  return `${formatNumber(value)} ${UNIT_LABELS[from]} = ${formatNumber(result)} ${UNIT_LABELS[to]}`;
+  return `${formatNumber(value)} ${unitLabel(from)} = ${formatNumber(result)} ${unitLabel(to)}`;
 }

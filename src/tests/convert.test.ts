@@ -14,8 +14,12 @@ const FACTOR: Record<UnitId, number> = {
   sqm: 10.7639104167,
   katha: 720,
   bigha: 14400,
+  chotak: 45,
   shotangsho: 435.6,
   decimal: 435.6,
+  gonda: 864,
+  kani: 17280,
+  kani40: 17424,
   acre: 43560,
 };
 
@@ -24,7 +28,7 @@ function relDiff(actual: number, expected: number): number {
   return Math.abs(actual - expected) / Math.abs(expected);
 }
 
-describe("convert — full 49-pair matrix", () => {
+describe("convert — full 121-pair matrix", () => {
   it("matches hand-derived spot checks", () => {
     // 5 katha = 3600 sq ft = 8.2648… decimal
     expect(relDiff(convert(5, "katha", "decimal"), 3600 / 435.6)).toBeLessThan(1e-12);
@@ -36,7 +40,7 @@ describe("convert — full 49-pair matrix", () => {
     expect(relDiff(convert(2, "acre", "katha"), 121)).toBeLessThan(1e-12);
   });
 
-  it("covers every ordered pair (49 combinations) against the factor table", () => {
+  it("covers every ordered pair (121 combinations) against the factor table", () => {
     let pairCount = 0;
     for (const from of UNIT_IDS) {
       for (const to of UNIT_IDS) {
@@ -49,7 +53,7 @@ describe("convert — full 49-pair matrix", () => {
         ).toBeLessThan(1e-9);
       }
     }
-    expect(pairCount).toBe(49);
+    expect(pairCount).toBe(121);
   });
 
   it("covers every ordered pair with fractional and large values", () => {
@@ -104,6 +108,39 @@ describe("convert — documented invariants (MASTERPLAN §2)", () => {
   it("100 decimal = 1 acre (reverse direction)", () => {
     expect(convert(100, "decimal", "acre")).toBeCloseTo(1, 12);
   });
+
+  it("1 kani (20 gonda) = 20 gonda exactly", () => {
+    expect(convert(1, "kani", "gonda")).toBeCloseTo(20, 12);
+    expect(convert(20, "gonda", "kani")).toBeCloseTo(1, 12);
+  });
+
+  it("1 kani (20 gonda) = 17280 sq ft (8-hat-nol chain)", () => {
+    expect(convert(1, "kani", "sqft")).toBe(17280);
+  });
+
+  it("1 kani (40 shotok) = 40 decimal exactly", () => {
+    expect(convert(1, "kani40", "decimal")).toBeCloseTo(40, 12);
+    expect(convert(40, "decimal", "kani40")).toBeCloseTo(1, 12);
+  });
+
+  it("1 kani (40 shotok) = 17424 sq ft", () => {
+    expect(convert(1, "kani40", "sqft")).toBe(17424);
+  });
+
+  it("1 katha = 16 chotak", () => {
+    expect(convert(1, "katha", "chotak")).toBeCloseTo(16, 12);
+    expect(convert(16, "chotak", "katha")).toBeCloseTo(1, 12);
+  });
+
+  it("1 chotak = 45 sq ft", () => {
+    expect(convert(1, "chotak", "sqft")).toBe(45);
+  });
+
+  it("the two kani standards differ by exactly 40 shotok vs 20 gonda, ≈0.83%", () => {
+    const ratio = convert(1, "kani", "kani40");
+    expect(ratio).toBeCloseTo(17280 / 17424, 12);
+    expect(ratio).toBeLessThan(1);
+  });
 });
 
 describe("convert — round-trips and reverse consistency", () => {
@@ -156,8 +193,8 @@ describe("registry sanity (MASTERPLAN §17)", () => {
     }
   });
 
-  it("UNITS_LIST has 7 entries sorted by display order", () => {
-    expect(UNITS_LIST).toHaveLength(7);
+  it("UNITS_LIST has 11 entries sorted by display order", () => {
+    expect(UNITS_LIST).toHaveLength(11);
     for (let i = 1; i < UNITS_LIST.length; i++) {
       expect(UNITS_LIST[i].order).toBeGreaterThan(UNITS_LIST[i - 1].order);
     }
@@ -171,7 +208,7 @@ describe("registry sanity (MASTERPLAN §17)", () => {
     }
   });
 
-  it("has 7 unique unit ids", () => {
-    expect(new Set(UNIT_IDS).size).toBe(7);
+  it("has 11 unique unit ids", () => {
+    expect(new Set(UNIT_IDS).size).toBe(11);
   });
 });

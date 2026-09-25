@@ -14,7 +14,8 @@ Bangladeshis routinely negotiate land in katha, bigha, shotangsho, decimal, acre
 
 ### In scope
 
-- Instant conversion among **7 units**: Katha, Bigha, Shotangsho, Decimal, Square Feet, Square Meters, Acre.
+- Instant conversion among **11 units**: Katha, Bigha, Chotak, Shotangsho, Decimal, Gonda, Kani (20 Gonda), Kani (40 Shotok), Square Feet, Square Meters, Acre.
+  - *Owner expansion 2026-09-25:* +4 regional units (kani ×2, gonda, chotak) after the owner supplied a government land-measurement reference. Kani appears twice because the source (and field practice) mixes two standards; they ship as separate, labeled units rather than one ambiguous factor.
 - Mobile-first single-page web app, deployable as a static site.
 - Bilingual interface: English and Bengali (full toggle, see §11).
 - Quick-conversion shortcuts, copy result, shareable URLs (§9, §10).
@@ -45,17 +46,31 @@ All factors are defined **once** in `src/data/units.ts`. Values are per **1 unit
 | Bigha | বিঘা | বিঘা | 14,400 (= 20 katha) | BD convention |
 | Shotangsho | শতাংশ | শতাংশ | 435.6 | 1 shotangsho = 1 decimal |
 | Decimal | ডেসিমেল | ডেসিমেল | 435.6 | 1 acre = 100 decimal |
+| Gonda | গন্ডা | গন্ডা | 864 | 20 gonda = 1 kani (20-Gonda standard) |
+| Kani (20 Gonda) | কানি | কানি | 17,280 | 8-hat-nol system |
+| Kani (40 Shotok) | কানি | কানি | 17,424 | 40 × 435.6; ≈ +0.83% vs the other kani |
+| Chotak | ছটাক | ছটাক | 45 | 16 chotak = 1 katha |
 | Acre | একর | acre | 43,560 | |
 
 **Derivations (documented, not hardcoded ad hoc):**
 
 - 1 bigha = 20 katha = 20 × 720 = 14,400 sq ft ✔
 - 1 acre = 100 decimal = 100 × 435.6 = 43,560 sq ft ✔
+- 1 kani (20 Gonda) = 20 × 864 = 17,280 sq ft ✔ (8-hat-nol: kora 216, kranti 72, til 3.6 — internally consistent)
+- 1 kani (40 Shotok) = 40 × 435.6 = 17,424 sq ft ✔ (the two kanis differ by ≈0.83%)
+- 1 chotak = 720 / 16 = 45 sq ft ✔
 - 1 m² = 0.09290304 sq ft → 1 sq ft = 1 / 0.09290304 = 10.763910416709722… m⁻¹; **we store 10.7639104167 (sq ft per m²)** as the app's constant, and display round to 2–4 decimals.
 
-**Consistency invariants** (asserted by tests, §17): `bigha = 20 × katha`, `acre = 100 × decimal`, `shotangsho ≡ decimal`, `acre = 43,560 sq ft`.
+**Consistency invariants** (asserted by tests, §17): `bigha = 20 × katha`, `acre = 100 × decimal`, `shotangsho ≡ decimal`, `acre = 43,560 sq ft`, `kani(20G) = 20 × gonda`, `kani(40S) = 40 × decimal`, `katha = 16 × chotak`.
 
-**Regional variation:** The UI must state (converter footnote + FAQ) that katha/bigha differ by region and history (e.g., in parts of India/West Bengal a katha may be ~720 sq ft in Bangladesh but other values elsewhere; in Bihar/Nepal historically different). We ship **one** profile: Bangladesh standard. No hidden overrides.
+**Regional variation:** The UI must state (About/FAQ) that katha/bigha differ by region and history, and that **kani has two coexisting standards in Bangladesh** (17,280 vs 17,424 sq ft). We ship both kani standards as separate labeled units; katha/bigha keep one BD profile. Some government-derived references also quote "1 kani = 120 decimal" (a district variant, 52,272 sq ft) — disclosed in FAQ rather than shipped, to keep the unit list focused.
+
+**Verification audit (2026-09-25, owner-supplied government reference):** The owner pasted a widely circulated "Calculation of area of land in Bangladesh" page (government-derived). It was **not** copied verbatim — it contains internal contradictions and typos:
+
+- It mixes the two kani standards without labeling ("17280 sq ft = 1 Kani" and "1936 Bargogoz = 1 Kani" cannot both be true; 17,280/9 = 1,920 sq yd, not 1,936).
+- Typos: "40 Acore = 1 Kani", "1 Acre = 43,200 sq ft", "147.105 Shotok = 1 Hector" (should be 247.105), "1 sq chain = 100×1000 links" (it is 100×100).
+- Hand-verified and adopted: gonda 864 → kora 216 → kranti 72 → til 3.6 sq ft; chotak 45 sq ft; 1 katha = 1.65 shotok ≈.
+- Not shipped: kranti/til/kak/renu (tiny fractions, low utility), hectare/ayer, square link/hat/gaz (intermediate units).
 
 **Verification audit (2026-09-25, owner-requested):** The factors above were re-checked against independent sources and are **correct for the Bangladesh convention**:
 
@@ -103,7 +118,7 @@ type ParseOutcome =
 
 ### Test matrix (§17)
 
-All 7×7 = 49 ordered pairs, plus: zero, tiny decimals (1e-6), large values (1e12 sq ft), round-trips (a→b→a within 1e-9 relative tolerance), reverse-pair consistency, fraction inputs (0.5, 2.75), and formatting cases (trailing zeros, grouping, ≥1e21 exponential fallback).
+All 11×11 = 121 ordered pairs, plus: zero, tiny decimals (1e-6), large values (1e12 sq ft), round-trips (a→b→a within 1e-9 relative tolerance), reverse-pair consistency, fraction inputs (0.5, 2.75), and formatting cases (trailing zeros, grouping, ≥1e21 exponential fallback).
 
 ---
 
@@ -563,6 +578,7 @@ Vitest + React Testing Library (`@testing-library/react`, already typical in tem
 | 11 | localStorage for language only | First-party preference, not tracking; documented honestly |
 | 12 | Primary color: deep indigo-blue `#2B4C9B`; no green anywhere | Owner decision 2026-09-25; blue reads calm/trustworthy, AA contrast verified |
 | 13 | Conversion factors verified against sources (2026-09-25) | Wikipedia + BD land-law references confirm 720 / 14,400 / 435.6 / 43,560 sq ft; Bihar's 1,361.25 katha explicitly rejected |
+| 14 | +4 regional units; kani ships twice (17,280 and 17,424 sq ft) | Owner decision 2026-09-25 after a gov-derived reference mixed two kani standards; separate labeled units beat one ambiguous factor; kranti/til/renu/hectare deliberately out of scope |
 
 ---
 
