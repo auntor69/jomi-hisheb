@@ -117,7 +117,7 @@ Single formatter in `src/lib/format.ts`, used everywhere (main result, quick lis
   - < 1 → up to 6 significant decimals
 - Trim trailing zeros (Intl handles via `maximumFractionDigits`; explicitly `trailingZeroDisplay: "stripIfInteger"`).
 - **No rounding of stored value** — format the float64 result; never re-parse displayed text.
-- Copy format: `5 Katha = 8.26 Decimal` (value + unit name, matching on-screen text).
+- Copy format: `5 Katha = 8.2648 Decimal` (value + unit name, matching on-screen text; 4 decimals for values ≥ 1 per this section).
 
 ---
 
@@ -218,7 +218,7 @@ Plain static HTML+JS (no build) was considered and rejected: it loses TypeScript
 │  [ 5          ] [ Katha ▾          ] │   ← source row
 │    কাঠা                               │   ← bengali name under input/select
 │              (⇅)                      │   ← swap button, centered
-│  [ 8.26       ] [ Decimal ▾        ] │   ← result row
+│  [ 8.2648     ] [ Decimal ▾        ] │   ← result row
 │    ডেসিমেল               [⧉ copy]     │   ← copy button
 └──────────────────────────────────────┘
 ```
@@ -235,7 +235,7 @@ Plain static HTML+JS (no build) was considered and rejected: it loses TypeScript
 1. Convert instantly on every keystroke — no Calculate button, no debounce on the math (§13).
 2. Changing either unit re-computes immediately.
 3. Swap preserves the numeric input; result recomputes.
-4. Copy writes `5 Katha = 8.26 Decimal` (or current-language unit names) via `navigator.clipboard.writeText`; fallback: legacy `document.execCommand('copy')` path inside try/catch, then a visible "Copy failed" message if both fail (never `alert()`).
+4. Copy writes `5 Katha = 8.2648 Decimal` (or current-language unit names) via `navigator.clipboard.writeText`; fallback: legacy `document.execCommand('copy')` path inside try/catch, then a visible "Copy failed" message if both fail (never `alert()`).
 5. Unit change never clears the user's typed value.
 6. Quick-conversion chips set `from`/`to`, keep the current value, scroll converter into view on mobile if it's off-screen (`scrollIntoView({block:'nearest'})`).
 
@@ -434,13 +434,13 @@ Full bilingual support **is in scope** (it's cheap once strings are centralized)
 
 **`validate.test.ts`:** "", "   ", "abc", "12.3.4", "-5", "5.", ".", "1e3", "1e308", "  42  " → expected `ParseOutcome`s. Rule: trim whitespace; reject `-` anywhere except leading minus (→ negative error); "5." → `empty`-equivalent ("still typing"); scientific notation accepted (engine handles it; display formatting handles magnitude).
 
-**`format.test.ts`:** trailing-zero stripping (`8.2600`→`8.26`), grouping (`14400`→`14,400`), small numbers (0.0001 → 6 decimals), very large (≥1e21 → exponential), copy format (`5 Katha = 8.26 Decimal`).
+**`format.test.ts`:** trailing-zero stripping (`8.2600`→`8.26`), grouping (`14400`→`14,400`), small numbers (0.0001 → 6 decimals), very large (≥1e21 → exponential), copy format (`5 Katha = 8.2648 Decimal`).
 
 ### UI tests
 
 Vitest + React Testing Library (`@testing-library/react`, already typical in template) if present; otherwise manual QA checklist:
 
-- Type "5" with katha→decimal: result shows 8.26 instantly.
+- Type "5" with katha→decimal: result shows 8.2648 instantly.
 - Change target to bigha with input 5 katha: result updates to 0.25 (5×720=3600 sq ft ÷ 14,400).
 - Swap: units flip, input preserved, result recomputes.
 - Copy: clipboard contains formatted result; feedback shows.
