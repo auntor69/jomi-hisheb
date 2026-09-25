@@ -1,6 +1,7 @@
 /**
- * QuickConversions — 8 fixed common pairs (MASTERPLAN §9).
+ * QuickConversions — fixed common pairs (MASTERPLAN §9).
  * Sets from/to, preserves the current input value, active pair highlighted.
+ * 11 pairs: the 8 core pairs plus 3 regional ones (kani, gonda, bigha↔shotok).
  */
 import { useLang } from "./LangContext.tsx";
 import { UNITS, type UnitId } from "../data/units.ts";
@@ -15,6 +16,9 @@ const PAIRS: Array<{ from: UnitId; to: UnitId }> = [
   { from: "acre", to: "decimal" },
   { from: "sqft", to: "sqm" },
   { from: "bigha", to: "acre" },
+  { from: "kani", to: "decimal" },
+  { from: "gonda", to: "katha" },
+  { from: "bigha", to: "shotangsho" },
 ];
 
 interface QuickConversionsProps {
