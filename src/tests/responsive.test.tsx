@@ -1,7 +1,8 @@
 /**
  * Responsive + caption assertions — MASTERPLAN §8 (stacking fallback) and §11 (captions).
- * Verifies the compiled class contract: rows are side-by-side ≥380px and stack
- * below it, and unit captions show the *other* language in each mode.
+ * Verifies the compiled class contract: rows are grid side-by-side ≥380px,
+ * stack below it, the result never truncates (screenshot-critique fix), and
+ * unit captions show the *other* language in each mode.
  * @vitest-environment jsdom
  */
 import { describe, it, expect, beforeEach } from "vitest";
@@ -23,17 +24,36 @@ function sourceRowClass(): string {
 }
 
 describe("responsive converter card", () => {
-  it("rows use the 380px stacking contract (column below, row above)", () => {
+  it("rows use the 380px stacking contract (column below, grid above)", () => {
     render(<App />);
     const cls = sourceRowClass();
     expect(cls).toContain("flex-col");
-    expect(cls).toContain("min-[380px]:flex-row");
+    expect(cls).toContain("min-[380px]:grid");
+    expect(cls).toContain("min-[380px]:grid-cols-[minmax(0,1fr)_auto]");
   });
 
   it("both rows (source and result) carry the stacking contract", () => {
     render(<App />);
     const rows = document.querySelectorAll("div.flex.flex-col");
     expect(rows.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("result output never truncates (screenshot-critique regression guard)", () => {
+    render(<App />);
+    const status = screen.getByRole("status") as HTMLElement;
+    // The value-bearing element must not carry the `truncate` class.
+    expect(status.className).not.toContain("truncate");
+    // The whole result box is kept wide (full width of its grid column).
+    const box = status.closest("div.h-16");
+    expect(box?.className).toContain("w-full");
+  });
+
+  it("input and result boxes share one height for row alignment", () => {
+    render(<App />);
+    const input = screen.getByLabelText("মান") as HTMLInputElement;
+    const box = (screen.getByRole("status") as HTMLElement).closest("div.h-16");
+    expect(input.className).toContain("h-16");
+    expect(box?.className).toContain("h-16");
   });
 
   it("swap button stays tappable (44px) in stacked layout", () => {
