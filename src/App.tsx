@@ -1,8 +1,13 @@
 /**
  * Jomi Hisheb — page composition (MASTERPLAN §6 page anatomy).
  * Single page, mobile-first, max-w-2xl, converter is the visual focus.
+ *
+ * State ownership: App owns `from`, `to`, and `input` so that (a) quick
+ * conversion chips can set units and (b) shareable-URL params (?from&to&value)
+ * initialize the whole converter coherently. ConverterCard is fully controlled.
+ * (Documented deviation from §5 in MASTERPLAN §19 milestones.)
  */
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { LangProvider, useLang } from "./components/LangContext.tsx";
 import Header from "./components/Header.tsx";
 import ConverterCard from "./components/ConverterCard.tsx";
@@ -11,21 +16,49 @@ import AboutUnits from "./components/AboutUnits.tsx";
 import FAQ from "./components/FAQ.tsx";
 import Footer from "./components/Footer.tsx";
 import type { UnitId } from "./data/units.ts";
-import { DEFAULT_FROM, DEFAULT_TO } from "./lib/share.ts";
+import {
+  buildSearch,
+  createUrlWriter,
+  DEFAULT_FROM,
+  DEFAULT_TO,
+  readStateFromUrl,
+} from "./lib/share.ts";
 
 function Page() {
   const { t } = useLang();
-  const [from, setFrom] = useState<UnitId>(DEFAULT_FROM);
-  const [to, setTo] = useState<UnitId>(DEFAULT_TO);
 
-  // Quick-conversion picks update App-level state; ConverterCard syncs via props-driven state.
-  const handlePick = (pickedFrom: UnitId, pickedTo: UnitId) => {
-    setFrom(pickedFrom);
-    setTo(pickedTo);
-    if (window.matchMedia("(max-width: 767px)").matches) {
-      document.getElementById("converter")?.scrollIntoView({ block: "start" });
-    }
-  };
+  // URL state is read exactly once on mount (MASTERPLAN §10).
+  const initial = useMemo(() => readStateFromUrl(window.location.search), []);
+
+  const [from, setFrom] = useState<UnitId>(initial.from);
+  const [to, setTo] = useState<UnitId>(initial.to);
+  const [input, setInput] = useState(initial.value);
+
+  // Sync URL (debounced) whenever state settles; default state keeps URL clean.
+  const writeUrl = useMemo(() => createUrlWriter(), []);
+  useEffect(() => {
+    const isDefault =
+      from === DEFAULT_FROM && to === DEFAULT_TO && input === "" && !initial.hasParams;
+    writeUrl(isDefault ? "" : buildSearch(from, to, input));
+  }, [from, to, input, writeUrl, initial.hasParams]);
+
+  const handleUnitsChange = useCallback((nextFrom: UnitId, nextTo: UnitId) => {
+    setFrom(nextFrom);
+    setTo(nextTo);
+  }, []);
+
+  const handlePick = useCallback(
+    (pickedFrom: UnitId, pickedTo: UnitId) => {
+      setFrom(pickedFrom);
+      setTo(pickedTo);
+      // Input value is preserved by design (MASTERPLAN §9).
+      // Guarded: matchMedia is unavailable in jsdom and some embedded webviews.
+      if (typeof window.matchMedia === "function" && window.matchMedia("(max-width: 767px)").matches) {
+        document.getElementById("converter")?.scrollIntoView({ block: "start" });
+      }
+    },
+    [],
+  );
 
   return (
     <div className="mx-auto max-w-2xl px-4 pb-8">
@@ -40,7 +73,13 @@ function Page() {
         </section>
 
         <div id="converter" className="scroll-mt-4">
-          <ConverterCard from={from} to={to} onUnitsChange={(f, tt) => { setFrom(f); setTo(tt); }} />
+          <ConverterCard
+            input={input}
+            onInputChange={setInput}
+            from={from}
+            to={to}
+            onUnitsChange={handleUnitsChange}
+          />
         </div>
 
         <QuickConversions from={from} to={to} onPick={handlePick} />

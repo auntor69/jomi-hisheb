@@ -4,19 +4,12 @@
  * input, reserved error line prevents layout shift, copy with feedback,
  * debounced URL sync.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpDown, Check, Copy, AlertCircle } from "lucide-react";
 import { convert } from "../lib/convert.ts";
 import { formatNumber, formatCopyText } from "../lib/format.ts";
 import { parseAreaInput, type ParseErrorReason } from "../lib/validate.ts";
 import { UNITS } from "../data/units.ts";
-import {
-  buildSearch,
-  createUrlWriter,
-  DEFAULT_FROM,
-  DEFAULT_TO,
-  readStateFromUrl,
-} from "../lib/share.ts";
 import type { UnitId } from "../data/units.ts";
 import { useLang } from "./LangContext.tsx";
 import UnitSelect from "./UnitSelect.tsx";
@@ -31,31 +24,26 @@ const ERROR_KEYS: Record<ParseErrorReason, "errNegative" | "errNotANumber" | "er
 const COPY_RESET_MS = 1500;
 
 interface ConverterCardProps {
+  /** Fully controlled by App: units + input live there so quick chips and
+   *  shareable-URL params drive one coherent state (see App.tsx note). */
+  input: string;
+  onInputChange: (value: string) => void;
   from: UnitId;
   to: UnitId;
-  /** Controlled units: App owns them so quick-conversion chips can set them too.
-   *  The input text stays internal to this card (MASTERPLAN §6). */
   onUnitsChange: (from: UnitId, to: UnitId) => void;
 }
 
-export default function ConverterCard({ from, to, onUnitsChange }: ConverterCardProps) {
+export default function ConverterCard({
+  input,
+  onInputChange,
+  from,
+  to,
+  onUnitsChange,
+}: ConverterCardProps) {
   const { t } = useLang();
 
-  // URL state is read exactly once on mount (MASTERPLAN §10).
-  const initial = useMemo(() => readStateFromUrl(window.location.search), []);
-
-  const [input, setInput] = useState(initial.value);
   const [copied, setCopied] = useState<"idle" | "ok" | "fail">("idle");
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const writeUrl = useMemo(() => createUrlWriter(), []);
-
-  // Sync URL (debounced) whenever state settles; default state keeps URL clean.
-  useEffect(() => {
-    const isDefault =
-      from === DEFAULT_FROM && to === DEFAULT_TO && input === "" && !initial.hasParams;
-    writeUrl(isDefault ? "" : buildSearch(from, to, input));
-  }, [from, to, input, writeUrl, initial.hasParams]);
 
   useEffect(() => {
     return () => {
@@ -109,6 +97,10 @@ export default function ConverterCard({ from, to, onUnitsChange }: ConverterCard
   const fromUnit = UNITS[from];
   const toUnit = UNITS[to];
 
+  /** Caption shows the language the select does NOT (select shows current UI
+   *  language first) — keeps the card bilingual in both modes (MASTERPLAN §11). */
+  const captionOf = (unit: (typeof UNITS)[UnitId]) => (t("langLabel") === "ভাষা" ? unit.en : unit.bn);
+
   return (
     <section
       aria-labelledby="converter-heading"
@@ -118,8 +110,9 @@ export default function ConverterCard({ from, to, onUnitsChange }: ConverterCard
         {t("resultLabel")} — {t("inputLabel")}
       </h2>
 
-      {/* Source row */}
-      <div className="flex items-center gap-3">
+      {/* Source row — stacks below ~380px so the input keeps usable width
+          (documented responsive fallback, MASTERPLAN §8) */}
+      <div className="flex flex-col items-stretch gap-2 min-[380px]:flex-row min-[380px]:items-center min-[380px]:gap-3">
         <div className="min-w-0 flex-1">
           <label htmlFor="area-input" className="sr-only">
             {t("inputLabel")}
@@ -131,7 +124,7 @@ export default function ConverterCard({ from, to, onUnitsChange }: ConverterCard
             autoComplete="off"
             placeholder="0"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => onInputChange(e.target.value)}
             aria-invalid={errorKey !== null}
             aria-describedby={errorKey !== null ? "input-error" : undefined}
             className="h-16 w-full min-w-0 rounded-lg border border-border bg-card px-4 text-3xl font-semibold tabular-nums text-card-foreground placeholder:text-muted-foreground/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
@@ -144,7 +137,7 @@ export default function ConverterCard({ from, to, onUnitsChange }: ConverterCard
           onChange={(u) => onUnitsChange(u, to)}
         />
       </div>
-      <p className="mt-1 h-5 text-xs text-muted-foreground">{t("brandBn") ? fromUnit.bn : ""}</p>
+      <p className="mt-1 h-5 text-xs text-muted-foreground">{captionOf(fromUnit)}</p>
 
       {/* Swap button */}
       <div className="relative flex justify-center py-1">
@@ -159,9 +152,11 @@ export default function ConverterCard({ from, to, onUnitsChange }: ConverterCard
         </button>
       </div>
 
-      {/* Result row */}
-      <div className="flex items-center gap-3">
-        <div className="min-w-0 flex-1" role="status" aria-live="polite">
+      {/* Result row — same stacking behavior as the source row */}
+      <div className="flex flex-col items-stretch gap-2 min-[380px]:flex-row min-[380px]:items-center min-[380px]:gap-3">
+        {/* <output> below has an implicit role="status" — keep a single live region
+            so screen readers announce the result exactly once. */}
+        <div className="min-w-0 flex-1" aria-live="polite">
           <span aria-hidden="true" className="sr-only">
             {t("resultLabel")}:{" "}
           </span>
@@ -182,7 +177,7 @@ export default function ConverterCard({ from, to, onUnitsChange }: ConverterCard
         />
       </div>
       <div className="mt-1 flex h-5 items-center justify-between">
-        <p className="text-xs text-muted-foreground">{toUnit.bn}</p>
+        <p className="text-xs text-muted-foreground">{captionOf(toUnit)}</p>
         <button
           type="button"
           onClick={copyResult}
