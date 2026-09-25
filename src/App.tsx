@@ -52,7 +52,8 @@ function Page() {
       setFrom(pickedFrom);
       setTo(pickedTo);
       // Input value is preserved by design (MASTERPLAN §9).
-      if (window.matchMedia("(max-width: 767px)").matches) {
+      // Guarded: matchMedia is unavailable in jsdom and some embedded webviews.
+      if (typeof window.matchMedia === "function" && window.matchMedia("(max-width: 767px)").matches) {
         document.getElementById("converter")?.scrollIntoView({ block: "start" });
       }
     },
