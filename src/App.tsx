@@ -8,6 +8,7 @@
  * (Documented deviation from §5 in MASTERPLAN §19 milestones.)
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { LangProvider, useLang } from "./components/LangContext.tsx";
 import Header from "./components/Header.tsx";
 import ConverterCard from "./components/ConverterCard.tsx";
@@ -96,6 +97,7 @@ export default function App() {
   return (
     <LangProvider>
       <Page />
+      <Analytics />
     </LangProvider>
   );
 }
