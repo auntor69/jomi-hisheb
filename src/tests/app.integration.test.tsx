@@ -93,8 +93,9 @@ describe("App integration", () => {
     expect(screen.getByText("Quick conversions")).toBeTruthy();
 
     const fromSelect = screen.getByLabelText(/From unit/) as HTMLSelectElement;
+    // Options show the current UI language only (captions carry the other one).
     const firstOption = fromSelect.options[0]?.textContent ?? "";
-    expect(firstOption.startsWith("Square Feet (")).toBe(true);
+    expect(firstOption).toBe("Square Feet");
 
     // Captions swap: EN mode shows the Bengali name under the row.
     expect(screen.getByText(UNITS.katha.bn)).toBeTruthy();
