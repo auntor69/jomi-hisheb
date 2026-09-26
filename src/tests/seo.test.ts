@@ -263,6 +263,79 @@ describe("open-source hygiene", () => {
     expect(read("LICENSE")).toContain("Afterclass Studio");
   });
 
+  it("covers every GitHub community-standards file", () => {
+    for (const file of [
+      "README.md",
+      "LICENSE",
+      "CONTRIBUTING.md",
+      "SECURITY.md",
+      "CODE_OF_CONDUCT.md",
+      ".github/pull_request_template.md",
+      ".github/ISSUE_TEMPLATE/config.yml",
+      ".github/ISSUE_TEMPLATE/bug_report.yml",
+      ".github/ISSUE_TEMPLATE/accuracy_report.yml",
+      ".github/ISSUE_TEMPLATE/feature_request.yml",
+    ]) {
+      expect(existsSync(join(ROOT, file)), `${file} is missing`).toBe(true);
+    }
+  });
+
+  it("adopts the Contributor Covenant and links it from the contributing guide", () => {
+    const coc = read("CODE_OF_CONDUCT.md");
+    expect(coc).toContain("Contributor Covenant Code of Conduct");
+    expect(coc).toContain("version 2.1");
+    expect(coc).toMatch(/## Enforcement/);
+    expect(coc).toContain("github.com/auntor69");
+    expect(read("CONTRIBUTING.md")).toContain("CODE_OF_CONDUCT.md");
+  });
+
+  it("issue forms are well-formed GitHub issue forms", () => {
+    const allowed = new Set(["markdown", "input", "textarea", "dropdown", "checkboxes"]);
+    for (const file of ["bug_report", "accuracy_report", "feature_request"]) {
+      const path = `.github/ISSUE_TEMPLATE/${file}.yml`;
+      const form = read(path);
+      // Front matter required by GitHub, and a label so reports are triageable.
+      expect(form).toMatch(/^name: .+/m);
+      expect(form).toMatch(/^description: .+/m);
+      expect(form).toMatch(/^labels: \[/m);
+      expect(form).toContain("body:");
+      expect(form).not.toMatch(/\t/);
+
+      const types = [...form.matchAll(/^\s*- type: (\w+)$/gm)].map((m) => m[1]);
+      expect(types.length).toBeGreaterThan(2);
+      for (const type of types) expect(allowed.has(type), `${path}: bad type ${type}`).toBe(true);
+      // Every non-markdown block needs an id and a prompt.
+      const ids = [...form.matchAll(/^\s*id: ([\w-]+)$/gm)].map((m) => m[1]);
+      expect(new Set(ids).size).toBe(ids.length);
+      expect(ids.length).toBe(types.filter((t) => t !== "markdown").length);
+      expect([...form.matchAll(/^\s*validations:$/gm)].length).toBeGreaterThan(0);
+    }
+  });
+
+  it("routes security reports away from public issues", () => {
+    const config = read(".github/ISSUE_TEMPLATE/config.yml");
+    expect(config).toContain("blank_issues_enabled: false");
+    expect(config).toContain(
+      "https://github.com/auntor69/jomi-hisheb/security/advisories/new",
+    );
+    // The bug form must not invite vulnerabilities into public issues.
+    expect(read(".github/ISSUE_TEMPLATE/bug_report.yml")).toMatch(/security/i);
+  });
+
+  it("pull request template asks for the checks CI cannot perform", () => {
+    const template = read(".github/pull_request_template.md");
+    for (const item of [
+      "bun run typecheck",
+      "bun run test",
+      "bun run build",
+      "Bengali and English",
+      "320px",
+      "Source / citation",
+    ]) {
+      expect(template).toContain(item);
+    }
+  });
+
   it("keeps CI least-privileged (read-only contents)", () => {
     const ci = read(".github/workflows/ci.yml");
     expect(ci).toContain("permissions:");

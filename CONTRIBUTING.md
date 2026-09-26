@@ -7,7 +7,7 @@ Thanks for taking the time to help. This project is maintained by **[Afterclass 
 - Conversion accuracy comes first. Any change to a factor needs a **cited, checkable source** (government/registry document, reputable survey reference). Unsourced factor changes will not be merged.
 - Keep it small: this is a single-page tool. Prefer editing existing files over adding new ones.
 - Respect the region scope. Jomi Hisheb uses **Bangladesh conventions**. Proposals for other regional standards should be discussed in an issue first.
-- Be kind. This repository follows the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
+- Be kind. This project adopts the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md); by participating you agree to uphold it. Report unacceptable behaviour privately, never in a public issue.
 
 ## Getting started
 
@@ -53,6 +53,18 @@ CI runs exactly these commands, so a green local run means a green pull request.
 ## Reporting security issues
 
 Do **not** use public issues for vulnerabilities. See [SECURITY.md](./SECURITY.md).
+
+## Opening an issue
+
+Structured forms keep reports actionable:
+
+| Use case | Where |
+|---|---|
+| Something is broken (crash, layout, accessibility) | **Bug report** form |
+| A factor or conversion result is wrong | **Conversion accuracy report** form (a source is required) |
+| A capability or usability idea | **Feature request** form |
+| A vulnerability | [SECURITY.md](./SECURITY.md) — private reporting, never an issue |
+| A Code of Conduct incident | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) — private report to the maintainer |
 
 ## License
 

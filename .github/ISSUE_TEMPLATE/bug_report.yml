@@ -1,0 +1,87 @@
+name: Bug report
+description: Something is broken — a crash, a layout problem, an accessibility barrier.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. A couple of notes before you start:
+
+        - **Security problems do not belong here** — please use the [private reporting flow](https://github.com/auntor69/jomi-hisheb/security/advisories/new) instead.
+        - **A wrong conversion factor is not a bug report** — it has its own form, *Conversion accuracy report*, because it needs a cited source rather than a stack trace. Go back to the chooser and pick that one.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before you file
+      options:
+        - label: I searched the existing issues and this has not been reported yet.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what actually happened?
+      placeholder: |
+        Expected: ...
+        Actual: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Type 5 into the value field
+        3. Select কাঠা (Katha) → ডেসিমেল (Decimal)
+        4. Scroll to ...
+    validations:
+      required: true
+
+  - type: input
+    id: link
+    attributes:
+      label: Shareable link (if it involves a conversion)
+      description: The address bar keeps the exact state — paste it here so it reproduces in one click.
+      placeholder: https://jomihisheb.vercel.app/?from=katha&to=decimal&value=5
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Interface language
+      options:
+        - বাংলা (Bengali)
+        - English
+        - Both / switching between them
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device, browser and version
+      placeholder: e.g. Redmi Note 12, Android 14, Chrome 128 — or iPhone 15, Safari 18
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or console output
+      description: Drag images in, or paste any error from the browser console (F12 → Console).
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I have removed any personal or sensitive information from the screenshots and logs above.
+          required: true

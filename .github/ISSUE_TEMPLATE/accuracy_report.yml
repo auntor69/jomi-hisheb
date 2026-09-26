@@ -1,0 +1,83 @@
+name: Conversion accuracy report
+description: A unit factor or conversion result is wrong (a cited source is required).
+title: "[Accuracy]: "
+labels: ["accuracy", "bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Accuracy is the one thing this project cannot be careless about. Please cite a checkable
+        source (a government or registry document, a survey reference, a published standard) —
+        reports without one cannot be merged, because a factor change affects every other unit.
+
+        Note that **Jomi Hisheb deliberately uses Bangladesh conventions**, and it ships **both**
+        kani standards (17,280 sq ft and 17,424 sq ft) as separate units. If a value differs from
+        a calculator using another region's standard (e.g. the Bihar katha of 1,361.25 sq ft),
+        that is expected behaviour, not a bug — see [README](https://github.com/auntor69/jomi-hisheb#conversion-standards).
+
+  - type: dropdown
+    id: unit
+    attributes:
+      label: Which unit is wrong?
+      options:
+        - Katha (কাঠা)
+        - Bigha (বিঘা)
+        - Chotak (ছটাক)
+        - Shotangsho (শতাংশ)
+        - Decimal (ডেসিমেল)
+        - Gonda (গন্ডা)
+        - Kani — 20 Gonda (কানি)
+        - Kani — 40 Shotok (কানি)
+        - Acre (একর)
+        - Square Foot (বর্গফুট)
+        - Square Meter (বর্গমিটার)
+        - More than one unit / the conversion between them
+    validations:
+      required: true
+
+  - type: input
+    id: input
+    attributes:
+      label: Value you entered
+      placeholder: e.g. 1 katha
+    validations:
+      required: true
+
+  - type: input
+    id: shown
+    attributes:
+      label: Result the site shows
+      placeholder: e.g. 16 chotak / 720 sq ft
+    validations:
+      required: true
+
+  - type: input
+    id: expected
+    attributes:
+      label: Result you believe is correct
+      placeholder: e.g. 17,280 sq ft
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: Link or quote the document that establishes the correct figure. Also say which district or deed type it applies to.
+      placeholder: |
+        Title / document:
+        URL:
+        Quote:
+        Region or deed type:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before you file
+      options:
+        - label: My source is publicly checkable (not "everyone knows" or a competing calculator).
+          required: true
+        - label: I understand this tool is a calculator, not a legal or cadastral authority.
+          required: true

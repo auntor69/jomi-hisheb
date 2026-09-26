@@ -148,7 +148,10 @@ The site ships crawlable static content inside `index.html` (hero copy, the unit
 
 Contributions are welcome — see [**CONTRIBUTING.md**](./CONTRIBUTING.md) for ground rules, local checks, and the PR checklist. Accuracy changes must come with a cited source.
 
-Found a security issue? Please follow [**SECURITY.md**](./SECURITY.md) instead of opening a public issue.
+- **Found a bug or layout problem?** Use the structured [bug report](https://github.com/auntor69/jomi-hisheb/issues/new?template=bug_report.yml) form.
+- **Conversion looks wrong?** Use the [accuracy report](https://github.com/auntor69/jomi-hisheb/issues/new?template=accuracy_report.yml) form — a source is required.
+- **Security issue?** Follow [**SECURITY.md**](./SECURITY.md) instead of opening a public issue.
+- **Everyone participating agrees to the [Code of Conduct](./CODE_OF_CONDUCT.md).**
 
 ## License
 
