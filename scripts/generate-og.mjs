@@ -61,8 +61,14 @@ canvas.line(Math.round(cx2), Math.round(cy2), Math.round(dx), Math.round(dy), 9,
 canvas.disc(Math.round(dx), Math.round(dy), 8, WHITE);
 
 // ---------- Copy ----------
+/** Wordmark geometry. Scale is capped by the plot motif — see the layout guard. */
+const WORDMARK = "JOMI HISHEB";
+const WORDMARK_X = 96;
+const WORDMARK_Y = 372;
+const WORDMARK_SCALE = 9;
+
 canvas.drawText(96, 96, "11 UNITS", 4, MUTED);
-canvas.drawText(96, 360, "JOMI HISHEB", 11, WHITE); // 77px tall
+canvas.drawText(WORDMARK_X, WORDMARK_Y, WORDMARK, WORDMARK_SCALE, WHITE); // 63px tall
 canvas.drawText(96, 470, "LAND UNIT CONVERTER - BANGLADESH", 4, MUTED);
 
 let chipX = 96;
@@ -77,14 +83,29 @@ for (const label of ["KATHA", "BIGHA", "DECIMAL", "KANI", "ACRE"]) {
 
 /**
  * Output path. The filename is a cache-busting lever: social crawlers cache OG
- * images hard, so a redesign ships under a NEW name (og-image-v2.png) with
+ * images hard, so a redesign ships under a NEW name (og-image-v3.png) with
  * `index.html` updated in the same change. An optional argv[2] overrides it.
  * Keep this default in sync with the `og:image` meta tag — `src/tests/ogImage.test.ts`
  * fails if the generator and `index.html` ever drift apart.
  */
-const OUT = process.argv[2] ?? "public/og-image-v2.png";
+const OUT = process.argv[2] ?? "public/og-image-v3.png";
 
 mkdirSync(dirname(OUT), { recursive: true });
+
+// ---------- Layout guard ----------
+// The wordmark used to be drawn at scale 11 (715px wide, ending at x=811) while
+// the plot-motif box starts at x=780 — so the final "B" of HISHEB straddled the
+// box border and sat inside it. Fail loud instead of shipping a collision.
+const MIN_GAP = 20;
+const wordmarkRight = WORDMARK_X + textWidth(WORDMARK, WORDMARK_SCALE);
+if (wordmarkRight > plotX - MIN_GAP) {
+  throw new Error(
+    `OG layout collision: "${WORDMARK}" at scale ${WORDMARK_SCALE} ends at x=${wordmarkRight}, ` +
+      `but the plot motif starts at x=${plotX} (needs ${MIN_GAP}px clearance). ` +
+      `Lower WORDMARK_SCALE to ${Math.floor(((plotX - MIN_GAP - WORDMARK_X) / (6 * WORDMARK.length - 1)) * 10) / 10} or less.`,
+  );
+}
+
 const png = encodePng(canvas);
 writeFileSync(OUT, png);
 console.log(`${OUT} written (${png.length} bytes, ${W}x${H})`);

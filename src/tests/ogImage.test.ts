@@ -66,12 +66,37 @@ describe("OG image — pixel font", () => {
   });
 });
 
+describe("OG image — layout", () => {
+  const num = (name: string) => Number(ogSource.match(new RegExp(`const ${name} = (\\d+);`))?.[1]);
+
+  it("keeps the wordmark clear of the plot-motif box", () => {
+    // The wordmark was drawn at scale 11, ending at x=811, while the motif box
+    // starts at x=780 — so the final "B" of HISHEB sat inside the box.
+    const word = ogSource.match(/const WORDMARK = "([^"]+)"/)?.[1] ?? "";
+    const scale = num("WORDMARK_SCALE");
+    const right = num("WORDMARK_X") + (word.length * 6 * scale - scale);
+    expect(word).toBe("JOMI HISHEB");
+    expect(right).toBeLessThanOrEqual(num("plotX") - 20);
+  });
+
+  it("keeps the wordmark inside the canvas", () => {
+    const word = ogSource.match(/const WORDMARK = "([^"]+)"/)?.[1] ?? "";
+    const scale = num("WORDMARK_SCALE");
+    expect(num("WORDMARK_X") + (word.length * 6 * scale - scale)).toBeLessThanOrEqual(1200);
+    expect(num("WORDMARK_Y") + 7 * scale).toBeLessThanOrEqual(630);
+  });
+
+  it("guards the layout at generation time rather than shipping a collision", () => {
+    expect(ogSource).toMatch(/OG layout collision/);
+  });
+});
+
 describe("OG image — generator output", () => {
   const outPath = ogSource.match(/process\.argv\[2\]\s*\?\?\s*"([^"]+)"/)?.[1];
   const cardPath = outPath?.replace(/^public\//, "/");
 
   it("writes to a 1200×630 PNG that actually exists on disk", () => {
-    expect(outPath).toBe("public/og-image-v2.png");
+    expect(outPath).toBe("public/og-image-v3.png");
     expect(existsSync(join(ROOT, outPath!))).toBe(true);
   });
 
