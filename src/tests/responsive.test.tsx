@@ -43,17 +43,22 @@ describe("responsive converter card", () => {
     const status = screen.getByRole("status") as HTMLElement;
     // The value-bearing element must not carry the `truncate` class.
     expect(status.className).not.toContain("truncate");
-    // The whole result box is kept wide (full width of its grid column).
-    const box = status.closest("div.h-16");
+    // The result box keeps the full width of its grid column and grows in
+    // height (min-h) instead of clipping long values.
+    const box = status.closest("div.min-h-16");
     expect(box?.className).toContain("w-full");
+    expect(box?.className).toContain("min-h-16");
   });
 
-  it("input and result boxes share one height for row alignment", () => {
+  it("input keeps the shared control height; result box can grow (overflow fix)", () => {
     render(<App />);
     const input = screen.getByLabelText("মান") as HTMLInputElement;
-    const box = (screen.getByRole("status") as HTMLElement).closest("div.h-16");
+    const box = (screen.getByRole("status") as HTMLElement).closest("div.min-h-16");
     expect(input.className).toContain("h-16");
-    expect(box?.className).toContain("h-16");
+    expect(box?.className).toContain("min-h-16");
+    // The old fixed h-16 on the result box is exactly what clipped values —
+    // guard against it coming back.
+    expect(box?.className).not.toContain("\bh-16");
   });
 
   it("swap button stays tappable (44px) in stacked layout", () => {
@@ -65,15 +70,17 @@ describe("responsive converter card", () => {
 });
 
 describe("bilingual captions (i18n fix verification)", () => {
+  // Captions live in <p> elements; the all-units grid also shows unit names
+  // inside its cards (<span>), so scope the query to paragraphs.
   it("BN mode shows English caption under the source row", () => {
     render(<App />);
-    expect(screen.getByText(UNITS.katha.en)).toBeTruthy();
+    expect(screen.getByText(UNITS.katha.en, { selector: "p" })).toBeTruthy();
   });
 
   it("EN mode shows Bengali caption under the source row", () => {
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "EN" }));
-    expect(screen.getByText(UNITS.katha.bn)).toBeTruthy();
+    expect(screen.getByText(UNITS.katha.bn, { selector: "p" })).toBeTruthy();
   });
 
   it("captions follow the selected units, not just the default", () => {
@@ -82,7 +89,33 @@ describe("bilingual captions (i18n fix verification)", () => {
       .replace("{from}", UNITS.acre.bn)
       .replace("{to}", UNITS.decimal.bn);
     fireEvent.click(screen.getByRole("button", { name: chipLabel }));
-    expect(screen.getByText(UNITS.acre.en)).toBeTruthy();
-    expect(screen.getByText(UNITS.decimal.en)).toBeTruthy();
+    expect(screen.getByText(UNITS.acre.en, { selector: "p" })).toBeTruthy();
+    expect(screen.getByText(UNITS.decimal.en, { selector: "p" })).toBeTruthy();
+  });
+});
+
+describe("long-result overflow fix (narrow-width screenshot bug)", () => {
+  it("a long result keeps text-primary and never carries fixed h-16 clipping", () => {
+    render(<App />);
+    const input = screen.getByLabelText("মান") as HTMLInputElement;
+    // 12345 katha → 20,404.96 decimal — the exact input from the bug screenshot.
+    fireEvent.change(input, { target: { value: "12345" } });
+    const status = screen.getByRole("status") as HTMLElement;
+    expect(status.textContent).toContain("20,404.96");
+    const box = status.closest("div.min-h-16") as HTMLElement;
+    expect(box.className).toContain("min-h-16");
+    // The OLD fixed `h-16` (exactly what clipped values) must not come back —
+    // match h-16 NOT preceded by "min-" and NOT part of another class.
+    expect(box.className).not.toMatch(/(?<![\w-])h-16(?![\w-])/);
+    // Long results step down the font size so they fit on one line.
+    expect(box.className).toContain("text-2xl");
+  });
+
+  it("short results keep the large hero size", () => {
+    render(<App />);
+    const input = screen.getByLabelText("মান") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "5" } });
+    const status = screen.getByRole("status") as HTMLElement;
+    expect((status.closest("div.min-h-16") as HTMLElement).className).toContain("text-3xl");
   });
 });

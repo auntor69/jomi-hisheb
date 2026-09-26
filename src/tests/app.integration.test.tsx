@@ -27,6 +27,49 @@ describe("App integration", () => {
     expect(screen.getByText("সাধারণ জিজ্ঞাসা")).toBeTruthy();
   });
 
+  it("FAQ includes the two-Kani item (6 items total)", () => {
+    render(<App />);
+    // Open the 6th accordion and check its answer text (summary text is unique).
+    fireEvent.click(screen.getByText(STRINGS.bn.faq6q));
+    expect(screen.getByText(STRINGS.bn.faq6a)).toBeTruthy();
+  });
+
+  it("all-units grid shows every unit converting the live input, tap retargets", () => {
+    render(<App />);
+    const input = screen.getByLabelText("মান") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "1" } });
+
+    // 1 katha = 720 sq ft, shown live in the grid (label carries both languages).
+    const sqftCard = screen.getByRole("button", {
+      name: STRINGS.bn.allUnitsAria.replace("{unit}", "বর্গফুট"),
+    });
+    expect(sqftCard.textContent).toContain("720");
+
+    // Tap the acre card → converter target becomes acre (input preserved).
+    const acreCard = screen.getByRole("button", {
+      name: STRINGS.bn.allUnitsAria.replace("{unit}", UNITS.acre.bn),
+    });
+    fireEvent.click(acreCard);
+    const toSelect = screen.getByLabelText(/যে এককে/) as HTMLSelectElement;
+    expect(toSelect.value).toBe("acre");
+    expect((screen.getByLabelText("মান") as HTMLInputElement).value).toBe("1");
+    // 1 katha in acre ≈ 0.0165
+    expect(screen.getByRole("status").textContent).toContain("0.0165");
+  });
+
+  it("result box carries the You-get label and a working clear button", () => {
+    render(<App />);
+    const input = screen.getByLabelText("মান") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "12" } });
+
+    expect(screen.getByText(STRINGS.bn.youGet)).toBeTruthy();
+
+    const clear = screen.getByRole("button", { name: STRINGS.bn.clearInput });
+    fireEvent.click(clear);
+    expect((screen.getByLabelText("মান") as HTMLInputElement).value).toBe("");
+    expect(screen.queryByRole("button", { name: STRINGS.bn.clearInput })).toBeNull();
+  });
+
   it("initializes units AND input from shareable URL (?from=acre&to=katha&value=2)", () => {
     window.history.replaceState(null, "", "/?from=acre&to=katha&value=2");
     render(<App />);
@@ -98,12 +141,12 @@ describe("App integration", () => {
     expect(firstOption).toBe("Square Feet");
 
     // Captions swap: EN mode shows the Bengali name under the row.
-    expect(screen.getByText(UNITS.katha.bn)).toBeTruthy();
+    expect(screen.getByText(UNITS.katha.bn, { selector: "p" })).toBeTruthy();
   });
 
   it("default BN mode shows English caption under the source row", () => {
     render(<App />);
-    expect(screen.getByText(UNITS.katha.en)).toBeTruthy();
+    expect(screen.getByText(UNITS.katha.en, { selector: "p" })).toBeTruthy();
   });
 
   it("negative input shows a polite error, not a crash", () => {
