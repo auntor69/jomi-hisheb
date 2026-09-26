@@ -67,6 +67,12 @@ describe("SEO — document metadata", () => {
     expect(metaContent("robots")).toMatch(/index, follow/);
   });
 
+  it("keeps the Search Console ownership proof (deleting it drops verification)", () => {
+    const proof = metaContent("google-site-verification");
+    expect(proof).toBeTruthy();
+    expect(proof!.length).toBeGreaterThan(30);
+  });
+
   it("declares language, direction, viewport, theme colour and fonts", () => {
     expect(html).toMatch(/<html lang="bn" dir="ltr">/);
     expect(html).toContain('name="viewport"');
