@@ -1,0 +1,6 @@
+# Canonical author identities for this repository.
+# Everything is attributed to the maintainer, including aliases that were used
+# before the identity was standardised, so `git shortlog -sne` reflects the
+# real history. Format: Proper Name <canonical@email> <alias@email>
+Auntor <225202809+auntor69@users.noreply.github.com> <rahmanauntor99@gmail.com>
+Auntor <225202809+auntor69@users.noreply.github.com> Auntor
