@@ -108,7 +108,7 @@ function buildPair(from: UnitId, to: UnitId): SeoPage {
     parts,
     factor,
     title: `${fromName} to ${toName} Converter | Jomi Hisheb`,
-    description: `1 ${fromName} = ${formatFactor(factor)} ${toName} (Bangladesh convention). Free instant ${fromName.toLowerCase()} to ${toName.toLowerCase()} converter with a full conversion table — কাঠা, বিঘা, শতাংশ, ডেসিমেল সহ সব একক।`,
+    description: `1 ${fromName} = ${formatFactor(factor)} ${toName} (Bangladesh convention). Free instant converter with a full conversion table — ফ্রি জমির হিসাব।`,
     reversePath: `/${slugFor(to)}-to-${slugFor(from)}`,
   };
 }

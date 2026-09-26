@@ -51,12 +51,18 @@ describe("SEO — document metadata", () => {
     expect(title).toMatch(/কাঠা/);
   });
 
-  it("has a substantial meta description with no HTML tags", () => {
+  it("has a meta description in every crawler's accepted band (25–160 chars)", () => {
     const description = metaContent("description");
     expect(description).toBeTruthy();
-    expect(description!.length).toBeGreaterThanOrEqual(80);
-    expect(description!.length).toBeLessThanOrEqual(320);
+    // Bing flags descriptions outside 25–160 as an SEO error; Google truncates
+    // around 160. The old 190-char description tripped Bing's check.
+    expect(description!.length).toBeGreaterThanOrEqual(50);
+    expect(description!.length).toBeLessThanOrEqual(160);
     expect(description!).not.toMatch(/</);
+  });
+
+  it("keeps og:description consistent with the meta description", () => {
+    expect(metaContent("og:description")).toBe(metaContent("description"));
   });
 
   it("declares a canonical URL on the production domain", () => {

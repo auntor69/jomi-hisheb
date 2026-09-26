@@ -68,8 +68,9 @@ describe("page registry", () => {
     expect(new Set(titles).size).toBe(titles.length);
     for (const page of SEO_PAGES) {
       expect(page.title.length).toBeLessThanOrEqual(80);
+      // Bing flags descriptions outside 25–160 as an SEO error; stay inside it.
       expect(page.description.length).toBeGreaterThanOrEqual(80);
-      expect(page.description.length).toBeLessThanOrEqual(320);
+      expect(page.description.length).toBeLessThanOrEqual(160);
     }
   });
 
