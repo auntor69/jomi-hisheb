@@ -117,15 +117,15 @@ describe("SEO — social cards", () => {
 
   it("points og:image and twitter:image at a real 1200×630 PNG", () => {
     for (const key of ["og:image", "twitter:image"]) {
-      expect(metaContent(key)).toBe(`${DOMAIN}/og-image.png`);
+      expect(metaContent(key)).toBe(`${DOMAIN}/og-image-v2.png`);
     }
     expect(metaContent("og:image:width")).toBe("1200");
     expect(metaContent("og:image:height")).toBe("630");
     expect(metaContent("og:image:alt")).toBeTruthy();
     expect(metaContent("twitter:card")).toBe("summary_large_image");
 
-    expect(existsSync(join(ROOT, "public/og-image.png"))).toBe(true);
-    expect(pngSize("public/og-image.png")).toEqual({ width: 1200, height: 630 });
+    expect(existsSync(join(ROOT, "public/og-image-v2.png"))).toBe(true);
+    expect(pngSize("public/og-image-v2.png")).toEqual({ width: 1200, height: 630 });
   });
 });
 

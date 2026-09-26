@@ -127,10 +127,12 @@ Static output — `vite build` produces `dist/`; no server or environment variab
 - **Netlify / Cloudflare Pages:** build `bun run build`, publish `dist/`.
 - **GitHub Pages:** publish `dist/` and add a `.nojekyll` file.
 
-Generated assets are committed and reproducible:
+Generated assets are committed and reproducible. The OG card is written to
+`public/og-image-v2.png`; social crawlers cache these hard, so a **redesign must
+use a new filename** (and update `index.html`) or the old card keeps serving.
 
 ```bash
-bun scripts/generate-og.mjs       # public/og-image.png       (1200×630 social card)
+bun scripts/generate-og.mjs       # public/og-image-v2.png    (1200×630 social card)
 bun scripts/generate-icons.mjs    # PWA icons: 192, 512, apple-touch
 ```
 

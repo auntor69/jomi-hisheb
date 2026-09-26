@@ -4,10 +4,11 @@
  * Renders the social-share card (indigo gradient, survey grid, plot-map motif,
  * brand mark, pixel-font copy) using the shared raster/PNG helpers.
  *
- * Run: `bun scripts/generate-og.mjs` → overwrites public/og-image.png.
+ * Run: `bun scripts/generate-og.mjs` → overwrites the OUT path below.
  * Committed output: regenerate only when the design changes.
  */
 import { writeFileSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { createCanvas, encodePng, textWidth } from "./lib/png.mjs";
 
 const W = 1200;
@@ -74,7 +75,16 @@ for (const label of ["KATHA", "BIGHA", "DECIMAL", "KANI", "ACRE"]) {
   chipX += tw + 40 + 16;
 }
 
-mkdirSync("public", { recursive: true });
+/**
+ * Output path. The filename is a cache-busting lever: social crawlers cache OG
+ * images hard, so a redesign ships under a NEW name (og-image-v2.png) with
+ * `index.html` updated in the same change. An optional argv[2] overrides it.
+ * Keep this default in sync with the `og:image` meta tag — `src/tests/ogImage.test.ts`
+ * fails if the generator and `index.html` ever drift apart.
+ */
+const OUT = process.argv[2] ?? "public/og-image-v2.png";
+
+mkdirSync(dirname(OUT), { recursive: true });
 const png = encodePng(canvas);
-writeFileSync("public/og-image.png", png);
-console.log(`public/og-image.png written (${png.length} bytes, ${W}x${H})`);
+writeFileSync(OUT, png);
+console.log(`${OUT} written (${png.length} bytes, ${W}x${H})`);
