@@ -94,7 +94,9 @@ const ID_TO_SLUG: Record<UnitId, string> = {
 };
 
 function buildPair(from: UnitId, to: UnitId): SeoPage {
-  const factor = UNITS[to].sqftPerUnit / UNITS[from].sqftPerUnit;
+  // value_in_to = value_in_from × (sqftPerUnit[from] / sqftPerUnit[to]).
+  // Example: 1 bigha = 14400 sq ft = 14400/720 = 20 katha.
+  const factor = UNITS[from].sqftPerUnit / UNITS[to].sqftPerUnit;
   const fromName = UNITS[from].en;
   const toName = UNITS[to].en;
   const parts = [slugFor(from), slugFor(to)];

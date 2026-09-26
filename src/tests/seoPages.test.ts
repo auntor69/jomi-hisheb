@@ -44,13 +44,23 @@ describe("page registry", () => {
     }
   });
 
-  it("computes each factor from the registry (to.sqft / from.sqft)", () => {
+  it("computes each factor from the registry (from.sqft / to.sqft — the direction the page converts)", () => {
     for (const page of SEO_PAGES) {
       expect(page.factor).toBeCloseTo(
-        UNITS[page.to].sqftPerUnit / UNITS[page.from].sqftPerUnit,
+        UNITS[page.from].sqftPerUnit / UNITS[page.to].sqftPerUnit,
         12,
       );
     }
+  });
+
+  it("produces real-world-correct headline rates (regression: the direction was once inverted)", () => {
+    const rate = (from: string, to: string) =>
+      SEO_PAGES.find((p) => p.from === from && p.to === to)!.factor;
+    expect(rate("bigha", "katha")).toBeCloseTo(20, 9); // 1 bigha = 20 katha
+    expect(rate("katha", "decimal")).toBeCloseTo(720 / 435.6, 9); // ≈ 1.6529
+    expect(rate("decimal", "katha")).toBeCloseTo(435.6 / 720, 9); // ≈ 0.605
+    expect(rate("kani", "decimal")).toBeCloseTo(17280 / 435.6, 9); // 1 kani = 39.6694 decimal
+    expect(rate("acre", "decimal")).toBeCloseTo(100, 9); // 1 acre = 100 decimal
   });
 
   it("gives every page a unique, length-bounded title and description", () => {
@@ -95,8 +105,8 @@ describe("rendered page HTML", () => {
   });
 
   it("states the exact rate with a worked table whose values match the registry", () => {
-    // 1 katha = 720 sq ft; 1 decimal = 435.6 sq ft → factor 720 / 435.6.
-    const factor = UNITS.decimal.sqftPerUnit / UNITS.katha.sqftPerUnit;
+    // 1 katha = 720 sq ft; 1 decimal = 435.6 sq ft → 1 katha = 720/435.6 decimal.
+    const factor = UNITS.katha.sqftPerUnit / UNITS.decimal.sqftPerUnit;
     expect(page.factor).toBeCloseTo(factor, 12);
     expect(html).toContain(`1 Katha (কাঠা) = ${formatFactor(factor)} Decimal (ডেসিমেল)`);
     // Table rows: 1 → factor, 5 → 5×factor, 100 → 100×factor.
