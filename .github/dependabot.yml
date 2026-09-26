@@ -1,0 +1,31 @@
+# Automated dependency updates (security hygiene for an open-source repo).
+# Dependabot opens a PR when a dependency or pinned action goes out of date;
+# CI runs the full test suite on every one of those PRs.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - dependencies
+    groups:
+      dev-dependencies:
+        dependency-type: development
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - dependencies

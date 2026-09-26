@@ -3,12 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#2B4C9B" />
+
+    <!-- Primary SEO -->
+    <title>জমির হিসাব — কাঠা, বিঘা, শতাংশ, ডেসিমেল রূপান্তরক | Jomi Hisheb</title>
     <meta
       name="description"
-      content="Convert katha, bigha, shotangsho, decimal, acre, square feet and square meters instantly. Free, accurate Bangladeshi land measurement converter — জমির হিসাব."
+      content="কাঠা, বিঘা, ছটাক, শতাংশ, ডেসিমেল, গন্ডা, কানি ও একর — সাথে সাথে রূপান্তর করুন। ১১টি একক, ফ্রি, নির্ভুল, বিজ্ঞাপনমুক্ত বাংলাদেশি জমির হিসাব। Katha, bigha, shotangsho, decimal, acre converter."
     />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="author" content="Afterclass Studio" />
+    <meta name="application-name" content="Jomi Hisheb" />
+    <meta name="apple-mobile-web-app-title" content="জমির হিসাব" />
+    <link rel="canonical" href="https://jomihisheb.vercel.app/" />
+
+    <!-- Social cards -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Jomi Hisheb (জমির হিসাব)" />
+    <meta
+      property="og:title"
+      content="জমির হিসাব — কাঠা, বিঘা, শতাংশ, ডেসিমেল রূপান্তরক | Jomi Hisheb"
+    />
+    <meta
+      property="og:description"
+      content="কাঠা, বিঘা, ছটাক, শতাংশ, ডেসিমেল, গন্ডা, কানি ও একর — সাথে সাথে রূপান্তর করুন। ১১টি একক, ফ্রি ও বিজ্ঞাপনমুক্ত।"
+    />
+    <meta property="og:url" content="https://jomihisheb.vercel.app/" />
+    <meta property="og:image" content="https://jomihisheb.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Jomi Hisheb — Bangladesh land unit converter (11 units: katha, bigha, decimal, kani, acre and more)"
+    />
+    <meta property="og:locale" content="bn_BD" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://jomihisheb.vercel.app/og-image.png" />
+
     <!-- Fonts: Noto Sans + Noto Sans Bengali, display=swap so system fallbacks render instantly (MASTERPLAN §7). -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,54 +54,213 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <!-- Canonical/OG URLs use the live production domain (Vercel). See MASTERPLAN.md §22. -->
-    <link rel="canonical" href="https://jomihisheb.vercel.app/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Jomi Hisheb – জমির হিসাব | Land Unit Converter Bangladesh" />
-    <meta
-      property="og:description"
-      content="Convert katha, bigha, shotangsho, decimal, acre, square feet and square meters instantly. Free, accurate Bangladeshi land measurement converter — জমির হিসাব."
-    />
-    <meta property="og:url" content="https://jomihisheb.vercel.app/" />
-    <meta property="og:image" content="https://jomihisheb.vercel.app/og-image.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Jomi Hisheb — Bangladesh land unit converter (11 units: katha, bigha, decimal, kani, acre and more)" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:locale:alternate" content="bn_BD" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://jomihisheb.vercel.app/og-image.png" />
-    <title>Jomi Hisheb – জমির হিসাব | Land Unit Converter Bangladesh</title>
+
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Jomi Hisheb (জমির হিসাব)",
-        "alternateName": "জমির হিসাব",
-        "description": "Convert katha, bigha, chotak, shotangsho, decimal, gonda, kani, acre, square feet and square meters instantly. Free, accurate Bangladeshi land measurement converter.",
+        "alternateName": ["জমির হিসাব", "Jomi Hisheb — Bangladesh Land Unit Converter"],
         "url": "https://jomihisheb.vercel.app/",
+        "description": "Free instant Bangladesh land-unit converter: katha, bigha, chotak, shotangsho, decimal, gonda, kani, acre, square feet and square meters, with a live all-units grid.",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any",
-        "inLanguage": ["bn", "en"],
+        "browserRequirements": "Requires JavaScript for the interactive converter",
+        "inLanguage": ["bn-BD", "en"],
+        "isAccessibleForFree": true,
+        "screenshot": "https://jomihisheb.vercel.app/og-image.png",
+        "featureList": [
+          "11 Bangladeshi land units including two Kani standards",
+          "Live conversion into every unit at once",
+          "Bengali and English interface",
+          "Shareable result links",
+          "Works offline after the first load"
+        ],
         "offers": {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Afterclass Studio"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "Afterclass Studio"
+        }
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "এই মানগুলো কি বাংলাদেশের জন্য সরকারি?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "এগুলো বাংলাদেশে প্রচলিত মান অনুযায়ী। দলিল বা জরিপের ক্ষেত্রে সরকারি কাগজের সঙ্গে মিলিয়ে দেখুন।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "অন্য সাইটে কাঠার ভিন্ন মান দেখায় কেন?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "কাঠা ও বিঘা অঞ্চলভেদে ভিন্ন হয়। কিছু ভারতীয় ক্যালকুলেটরে ১ কাঠা = ১,৩৬১.২৫ বর্গফুট (বিহারের মান) দেখানো হয়। এখানে বাংলাদেশের মান ব্যবহৃত: ১ কাঠা = ৭২০ বর্গফুট।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "শতাংশ ও ডেসিমেল কি একই?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "হ্যাঁ। শতাংশ (শতক) ও ডেসিমেল দুটোই ৪৩৫.৬ বর্গফুট, অর্থাৎ এক একরের একশো ভাগের এক ভাগ। ১ একর = ১০০ ডেসিমেল।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "এটি কি আইনি পরিমাপ যন্ত্র?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "না। এটি কেবল হিসাবের সহায়ক। এটি দিয়ে মালিকানা, দাগ নম্বর বা সরকারি জরিপ নির্ধারণ করা যায় না।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "আমি যা লিখি তা কি কোথাও পাঠানো হয়?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "না। সব হিসাব আপনার ব্রাউজারেই হয় এবং আপনার লেখা সংখ্যা কোথাও পাঠানো হয় না। সাইটে শুধু নাম-পরিচয়হীন পেজ-ভিউ গণনা করা হয়।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "এখানে কোন কানি ব্যবহৃত হয়?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "বাংলাদেশে কানির দুটি প্রচলিত মান আছে: '২০ গন্ডা' কানি = ১৭,২৮০ বর্গফুট এবং '৪০ শতাংশ' কানি = ১৭,৪২৪ বর্গফুট। দুটোই আলাদা একক হিসেবে দেওয়া আছে।"
+            }
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Afterclass Studio",
+        "description": "Independent software studio. Jomi Hisheb (জমির হিসাব) is an open-source Bangladeshi land-unit converter built by Afterclass Studio.",
+        "logo": "https://jomihisheb.vercel.app/icon-512.png"
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Jomi Hisheb (জমির হিসাব)",
+        "url": "https://jomihisheb.vercel.app/",
+        "inLanguage": "bn-BD",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Afterclass Studio"
         }
       }
     </script>
   </head>
   <body>
     <div id="root">
-      <!-- Static fallback content: crawlable/meaningful without JS (MASTERPLAN §14). React replaces this on mount. -->
-      <main style="max-width: 672px; margin: 0 auto; padding: 24px 16px; font-family: 'Noto Sans Bengali', 'Noto Sans', ui-sans-serif, system-ui, sans-serif;">
-        <h1 style="font-size: 24px; color: #1c2321;">জমির হিসাব — জমির পরিমাপ রূপান্তরক</h1>
-        <p style="font-size: 14px; color: #5d5d5a; line-height: 1.6;">
-          কাঠা, বিঘা, ছটাক, শতাংশ, ডেসিমেল, গন্ডা, কানি, একর, বর্গফুট ও বর্গমিটার — সাথে সাথে রূপান্তর করুন। Jomi Hisheb is a free, instant Bangladesh land-unit converter: katha, bigha, chotak, shotangsho, decimal, gonda, kani, acre, square feet and square meters — with a live all-units grid.
+      <!-- Static fallback: crawlable, meaningful content without JS (MASTERPLAN §14).
+           React replaces this block on mount, so nothing is duplicated at runtime. -->
+      <main style="max-width: 672px; margin: 0 auto; padding: 24px 16px; font-family: 'Noto Sans Bengali', 'Noto Sans', ui-sans-serif, system-ui, sans-serif; color: #1c2321;">
+        <p style="font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #5d5d5a; margin: 0 0 8px;">
+          Afterclass Studio
         </p>
-        <p style="font-size: 14px; color: #5d5d5a; line-height: 1.6;">
-          বাংলাদেশের প্রচলিত মান: ১ কাঠা = ৭২০ বর্গফুট · ২০ কাঠা = ১ বিঘা = ১৪,৪০০ বর্গফুট · ১ শতাংশ (ডেসিমেল) = ৪৩৫.৬ বর্গফুট · ১ একর = ১০০ ডেসিমেল = ৪৩,৫৬০ বর্গফুট। Standard values used: 1 katha = 720 sq ft · 1 bigha = 20 katha = 14,400 sq ft · 1 shotangsho = 1 decimal = 435.6 sq ft · 1 acre = 43,560 sq ft. Katha and bigha vary by region — this tool follows the Bangladesh convention and is not a legal survey tool.
+        <h1 style="font-size: 24px; margin: 0 0 12px;">
+          জমির হিসাব — কাঠা, বিঘা, শতাংশ ও ডেসিমেল রূপান্তরক
+        </h1>
+        <p style="font-size: 14px; color: #5d5d5a; line-height: 1.6; margin: 0 0 12px;">
+          জমির হিসাব (Jomi Hisheb) একটি ফ্রি, বিজ্ঞাপনমুক্ত বাংলাদেশি জমির একক রূপান্তরক। কাঠা, বিঘা,
+          ছটাক, শতাংশ, ডেসিমেল, গন্ডা, কানি, একর, বর্গফুট ও বর্গমিটার — যেকোনো মান লিখলেই সাথে সাথে
+          সব এককে ফলাফল দেখা যায়, এবং যা লিখছেন তা আপনার ব্রাউজার ছেড়ে কোথাও যায় না।
         </p>
+        <p style="font-size: 14px; color: #5d5d5a; line-height: 1.6; margin: 0 0 20px;">
+          Jomi Hisheb is a free, ad-free Bangladeshi land-unit converter: type any value to convert
+          between katha, bigha, chotak, shotangsho, decimal, gonda, kani, acre, square feet and square
+          meters — with every unit shown at once. Part of a small open-source project by Afterclass Studio.
+        </p>
+
+        <h2 style="font-size: 18px; margin: 0 0 8px;">কীভাবে ব্যবহার করবেন</h2>
+        <ol style="font-size: 14px; color: #5d5d5a; line-height: 1.6; padding-left: 20px; margin: 0 0 20px;">
+          <li>জমির পরিমাণ লিখুন (যেমন ৫)।</li>
+          <li>যে একক থেকে রূপান্তর করবেন সেটি বেছে নিন — যেমন কাঠা।</li>
+          <li>যে এককে জানতে চান সেটি বেছে নিন — যেমন শতাংশ, এবং ফলাফল কপি করুন।</li>
+        </ol>
+
+        <h2 style="font-size: 18px; margin: 0 0 8px;">বাংলাদেশের প্রচলিত একক (রূপান্তরের ভিত্তি)</h2>
+        <table style="font-size: 13px; color: #5d5d5a; border-collapse: collapse; width: 100%; margin: 0 0 20px;">
+          <thead>
+            <tr>
+              <th style="text-align: left; border-bottom: 1px solid #e4e1d6; padding: 6px 8px 6px 0;">একক</th>
+              <th style="text-align: left; border-bottom: 1px solid #e4e1d6; padding: 6px 8px 6px 0;">Unit</th>
+              <th style="text-align: left; border-bottom: 1px solid #e4e1d6; padding: 6px 0;">১ একক = কত বর্গফুট</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding: 5px 8px 5px 0;">বর্গফুট</td><td style="padding: 5px 8px 5px 0;">Square foot</td><td style="padding: 5px 0;">১</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">বর্গমিটার</td><td style="padding: 5px 8px 5px 0;">Square meter</td><td style="padding: 5px 0;">১০.৭৬৩৯১০৪১৬৭</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">কাঠা</td><td style="padding: 5px 8px 5px 0;">Katha</td><td style="padding: 5px 0;">৭২০</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">বিঘা</td><td style="padding: 5px 8px 5px 0;">Bigha</td><td style="padding: 5px 0;">১৪,৪০০ (২০ কাঠা)</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">ছটাক</td><td style="padding: 5px 8px 5px 0;">Chotak</td><td style="padding: 5px 0;">৪৫ (১ কাঠার ১/১৬)</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">শতাংশ / শতক</td><td style="padding: 5px 8px 5px 0;">Shotangsho / Shotok</td><td style="padding: 5px 0;">৪৩৫.৬</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">ডেসিমেল</td><td style="padding: 5px 8px 5px 0;">Decimal</td><td style="padding: 5px 0;">৪৩৫.৬ (শতাংশের সমান)</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">গন্ডা</td><td style="padding: 5px 8px 5px 0;">Gonda</td><td style="padding: 5px 0;">৮৬৪</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">কানি (২০ গন্ডা)</td><td style="padding: 5px 8px 5px 0;">Kani (20 gonda)</td><td style="padding: 5px 0;">১৭,২৮০</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">কানি (৪০ শতাংশ)</td><td style="padding: 5px 8px 5px 0;">Kani (40 shotok)</td><td style="padding: 5px 0;">১৭,৪২৪</td></tr>
+            <tr><td style="padding: 5px 8px 5px 0;">একর</td><td style="padding: 5px 8px 5px 0;">Acre</td><td style="padding: 5px 0;">৪৩,৫৬০ (১০০ ডেসিমেল)</td></tr>
+          </tbody>
+        </table>
+
+        <h2 style="font-size: 18px; margin: 0 0 8px;">প্রচলিত রূপান্তর</h2>
+        <ul style="font-size: 14px; color: #5d5d5a; line-height: 1.6; padding-left: 20px; margin: 0 0 20px;">
+          <li>১ কাঠা = ৭২০ বর্গফুট = ১.৬৫ শতাংশ (ডেসিমেল)</li>
+          <li>১ শতাংশ = ১ ডেসিমেল = ৪৩৫.৬ বর্গফুট = ০.৬০৫ কাঠা</li>
+          <li>১ বিঘা = ২০ কাঠা = ১৪,৪০০ বর্গফুট = ৩৩.০৬ শতাংশ</li>
+          <li>১ একর = ১০০ ডেসিমেল = ৪৩,৫৬০ বর্গফুট = ৬০.৫ কাঠা</li>
+          <li>১ কানি (২০ গন্ডা) = ২০ গন্ডা = ১৭,২৮০ বর্গফুট = ২৪ কাঠা</li>
+          <li>১ কানি (৪০ শতাংশ) = ৪০ ডেসিমেল = ১৭,৪২৪ বর্গফুট</li>
+          <li>১ ছটাক = ৪৫ বর্গফুট (১ কাঠায় ১৬ ছটাক)</li>
+          <li>১ বর্গমিটার = ১০.৭৬৩৯১০৪১৬৭ বর্গফুট</li>
+        </ul>
+
+        <h2 style="font-size: 18px; margin: 0 0 8px;">সাধারণ জিজ্ঞাসা</h2>
+        <dl style="font-size: 14px; color: #5d5d5a; line-height: 1.6; margin: 0 0 20px;">
+          <dt style="font-weight: 600; color: #1c2321;">এই মানগুলো কি বাংলাদেশের জন্য সরকারি?</dt>
+          <dd style="margin: 4px 0 12px;">এগুলো বাংলাদেশে প্রচলিত মান অনুযায়ী। দলিল বা জরিপের ক্ষেত্রে সরকারি কাগজের সঙ্গে মিলিয়ে দেখুন।</dd>
+          <dt style="font-weight: 600; color: #1c2321;">অন্য সাইটে কাঠার ভিন্ন মান দেখায় কেন?</dt>
+          <dd style="margin: 4px 0 12px;">কাঠা ও বিঘা অঞ্চলভেদে ভিন্ন হয়। কিছু ভারতীয় ক্যালকুলেটরে ১ কাঠা = ১,৩৬১.২৫ বর্গফুট (বিহারের মান) দেখানো হয়। এখানে বাংলাদেশের মান: ১ কাঠা = ৭২০ বর্গফুট।</dd>
+          <dt style="font-weight: 600; color: #1c2321;">শতাংশ ও ডেসিমেল কি একই?</dt>
+          <dd style="margin: 4px 0 12px;">হ্যাঁ। শতাংশ (শতক) ও ডেসিমেল দুটোই ৪৩৫.৬ বর্গফুট, অর্থাৎ এক একরের একশো ভাগের এক ভাগ।</dd>
+          <dt style="font-weight: 600; color: #1c2321;">এটি কি আইনি পরিমাপ যন্ত্র?</dt>
+          <dd style="margin: 4px 0 12px;">না। এটি কেবল হিসাবের সহায়ক। এটি দিয়ে মালিকানা, দাগ নম্বর বা সরকারি জরিপ নির্ধারণ করা যায় না।</dd>
+          <dt style="font-weight: 600; color: #1c2321;">আমি যা লিখি তা কি কোথাও পাঠানো হয়?</dt>
+          <dd style="margin: 4px 0 12px;">না। সব হিসাব আপনার ব্রাউজারেই হয় এবং আপনার লেখা সংখ্যা কোথাও পাঠানো হয় না। সাইটে শুধু নাম-পরিচয়হীন পেজ-ভিউ গণনা করা হয়।</dd>
+          <dt style="font-weight: 600; color: #1c2321;">এখানে কোন কানি ব্যবহৃত হয়?</dt>
+          <dd style="margin: 4px 0 12px;">বাংলাদেশে কানির দুটি প্রচলিত মান আছে: '২০ গন্ডা' কানি = ১৭,২৮০ বর্গফুট এবং '৪০ শতাংশ' কানি = ১৭,৪২৪ বর্গফুট। দুটোই আলাদা একক হিসেবে দেওয়া আছে।</dd>
+        </dl>
+
+        <h2 style="font-size: 18px; margin: 0 0 8px;">Afterclass Studio</h2>
+        <p style="font-size: 14px; color: #5d5d5a; line-height: 1.6; margin: 0;">
+          জমির হিসাব একটি ওপেন সোর্স প্রকল্প, যা তৈরি করেছে <strong>Afterclass Studio</strong>।
+          সোর্স কোড GitHub-এ<a href="https://github.com/auntor69/jomi-hisheb" style="color: #2b4c9b;"> auntor69/jomi-hisheb</a>-এ পাওয়া যাবে।
+          ফিডব্যাক বা বাগ রিপোর্ট স্বাগতম।
+        </p>
+
         <noscript>এই রূপান্তরক ব্যবহার করতে জাভাস্ক্রিপ্ট চালু করুন। Please enable JavaScript to use the interactive converter.</noscript>
       </main>
     </div>
