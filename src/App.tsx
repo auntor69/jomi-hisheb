@@ -80,6 +80,16 @@ function Page() {
           <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground sm:text-base">
             {t("subtitle")}
           </p>
+          <ul className="mt-3 flex flex-wrap items-center justify-center gap-2">
+            {(["heroBadge1", "heroBadge2", "heroBadge3"] as const).map((key) => (
+              <li
+                key={key}
+                className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground"
+              >
+                {t(key)}
+              </li>
+            ))}
+          </ul>
         </section>
 
         <div id="converter" className="scroll-mt-4">
@@ -92,8 +102,9 @@ function Page() {
           />
         </div>
 
-        <QuickConversions from={from} to={to} onPick={handlePick} />
+        {/* Live payoff first (all units at once), then one-tap shortcuts. */}
         <AllUnitsGrid input={input} from={from} onPick={handleTargetPick} />
+        <QuickConversions from={from} to={to} onPick={handlePick} />
         <AboutUnits />
         <FAQ />
       </main>
