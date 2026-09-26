@@ -4,18 +4,13 @@
  * input, reserved error line prevents layout shift, copy with feedback,
  * debounced URL sync.
  *
- * Layout notes (post-overhaul):
- * - Result box uses `min-h-16` (not fixed `h-16`): long values like
- *   "4,059.5" at very narrow widths GROW the box instead of spilling over
- *   the caption below (screenshot bug fix). Text steps down to text-2xl for
- *   long outputs; `break-words` + `min-w-0` stay as the wrapping escape hatch.
- * - Rows keep the two-column grid `grid-cols-[minmax(0,1fr)_auto]` with the
- *   380px stacking fallback; input, selects, and the result box still share
- *   one visual height when the result fits on one line.
- * - The result box is the hero: primary-tinted border/background, "You get"
- *   label above, and an ≈-equivalents chip row (sq ft + katha) underneath.
- * - Copy sits inside the result box, right-aligned; a clear (×) button sits
- *   inside the input box and appears only when there is something to clear.
+ * Layout v3 (narrow-width bug fix, 2026-09-26): the value and the result each
+ * own a FULL-WIDTH row, so a long result can never be squeezed into the
+ * one-character-per-line wrap seen on production phones. The result is a
+ * full-width hero card: "You get" label + copy in its header, the value on its
+ * own line with a size ladder (text-4xl → text-xl by length), then ≈ sq ft /
+ * katha equivalence chips. Unit selects pair up beside the swap button at
+ * ≥520px and stack below it on phones.
  */
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpDown, Check, Copy, AlertCircle, X } from "lucide-react";
@@ -35,8 +30,20 @@ const ERROR_KEYS: Record<ParseErrorReason, "errNegative" | "errNotANumber" | "er
 };
 
 const COPY_RESET_MS = 1500;
-/** Results longer than this step down one size so they stay on one line. */
-const LONG_RESULT_LEN = 7;
+
+/**
+ * Value size ladder. Longer strings step down so the number stays on one line
+ * in the full-width result card (the result row itself is `break-words` as the
+ * last-resort escape hatch).
+ */
+function valueSizeClass(text: string | null): string {
+  const len = text?.length ?? 0;
+  if (len <= 9) return "text-4xl sm:text-5xl"; // 20,404.96
+  if (len <= 12) return "text-3xl sm:text-4xl"; // 825,759.38
+  if (len <= 15) return "text-2xl sm:text-3xl";
+  if (len <= 19) return "text-xl sm:text-2xl";
+  return "text-lg sm:text-xl"; // 1,652,892,561,983.47
+}
 
 interface ConverterCardProps {
   /** Fully controlled by App: units + input live there so quick chips,
@@ -55,7 +62,7 @@ export default function ConverterCard({
   to,
   onUnitsChange,
 }: ConverterCardProps) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   const [copied, setCopied] = useState<"idle" | "ok" | "fail">("idle");
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -114,22 +121,25 @@ export default function ConverterCard({
   const fromUnit = UNITS[from];
   const toUnit = UNITS[to];
 
-  /** Caption shows the language the select does NOT (select shows current UI
-   *  language first) — keeps the card bilingual in both modes (MASTERPLAN §11). */
-  const captionOf = (unit: (typeof UNITS)[UnitId]) => (t("langLabel") === "ভাষা" ? unit.en : unit.bn);
+  /** Captions show the language the select does NOT (select shows the current
+   *  UI language first) — keeps the card bilingual in both modes (§11). */
+  const captionOf = (unit: (typeof UNITS)[UnitId]) => (lang === "bn" ? unit.en : unit.bn);
+  /** Chips read naturally in the current language. */
+  const nameOf = (id: UnitId) => (lang === "bn" ? UNITS[id].bn : UNITS[id].en);
 
-  /** ≈-equivalents: the two most useful reference scales for any result. */
-  const chips: Array<{ id: UnitId; text: string }> = [];
+  /** Result-card chips: the target unit (in-place context for the number)
+   *  followed by ≈-equivalents — the two most useful reference scales. */
+  const chips: Array<{ id: string; text: string; strong?: boolean }> = [
+    { id: "target", text: nameOf(to), strong: true },
+  ];
   if (result !== null) {
-    const sqft = formatNumber(convert(result, to, "sqft"));
-    const katha = formatNumber(convert(result, to, "katha"));
-    if (to !== "sqft") chips.push({ id: "sqft", text: `≈ ${sqft} ${captionOf(UNITS.sqft)}` });
-    if (from !== "katha" && to !== "katha") chips.push({ id: "katha", text: `≈ ${katha} ${captionOf(UNITS.katha)}` });
+    if (to !== "sqft") {
+      chips.push({ id: "sqft", text: `≈ ${formatNumber(convert(result, to, "sqft"))} ${nameOf("sqft")}` });
+    }
+    if (to !== "katha") {
+      chips.push({ id: "katha", text: `≈ ${formatNumber(convert(result, to, "katha"))} ${nameOf("katha")}` });
+    }
   }
-
-  // Long results step down a size instead of wrapping into the caption.
-  const resultSizeClass =
-    resultText !== null && resultText.length > LONG_RESULT_LEN ? "text-2xl" : "text-3xl sm:text-4xl";
 
   return (
     <section
@@ -140,13 +150,15 @@ export default function ConverterCard({
         {t("resultLabel")} — {t("inputLabel")}
       </h2>
 
-      {/* Source row — value field flexes, select takes only its content width.
-          Stacks below 380px (documented responsive fallback, MASTERPLAN §8). */}
-      <div className="flex flex-col items-stretch gap-2 min-[380px]:grid min-[380px]:grid-cols-[minmax(0,1fr)_auto] min-[380px]:items-center min-[380px]:gap-3">
-        <div className="relative min-w-0">
-          <label htmlFor="area-input" className="sr-only">
-            {t("inputLabel")}
-          </label>
+      {/* Value — full-width row: the input never shares space with a select. */}
+      <div>
+        <label
+          htmlFor="area-input"
+          className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+        >
+          {t("inputLabel")}
+        </label>
+        <div className="relative">
           <input
             id="area-input"
             type="text"
@@ -157,64 +169,65 @@ export default function ConverterCard({
             onChange={(e) => onInputChange(e.target.value)}
             aria-invalid={errorKey !== null}
             aria-describedby={errorKey !== null ? "input-error" : undefined}
-            className="h-16 w-full min-w-0 rounded-lg border border-border bg-card pr-12 pl-4 text-3xl font-semibold tabular-nums text-card-foreground placeholder:text-muted-foreground/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="h-16 w-full min-w-0 rounded-lg border border-border bg-background pr-12 pl-4 text-3xl font-semibold tabular-nums text-card-foreground placeholder:text-muted-foreground/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           />
           {hasInput && (
             <button
               type="button"
               onClick={() => onInputChange("")}
               aria-label={t("clearInput")}
-              className="absolute top-1/2 right-1.5 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground hover:bg-background hover:text-card-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="absolute top-1/2 right-1.5 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground hover:bg-card hover:text-card-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
           )}
         </div>
-        <UnitSelect
-          id="from-unit"
-          label={t("fromUnitLabel")}
-          value={from}
-          onChange={(u) => onUnitsChange(u, to)}
-        />
       </div>
-      <p className="mt-1.5 min-h-5 text-xs text-muted-foreground">{captionOf(fromUnit)}</p>
 
-      {/* Swap button */}
-      <div className="relative flex justify-center py-1">
-        <div className="absolute inset-x-16 top-1/2 h-px -translate-y-1/2 bg-border" aria-hidden="true" />
+      {/* Source/target pair — stacks on phones, pairs around the swap button
+          at ≥520px where both select labels fit without clipping. */}
+      <div className="mt-3 flex flex-col items-stretch gap-1 min-[520px]:grid min-[520px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] min-[520px]:items-start min-[520px]:gap-3">
+        <div className="min-w-0">
+          <UnitSelect
+            id="from-unit"
+            label={t("fromUnitLabel")}
+            value={from}
+            onChange={(u) => onUnitsChange(u, to)}
+          />
+          <p className="mt-1.5 min-h-5 text-xs text-muted-foreground">{captionOf(fromUnit)}</p>
+        </div>
         <button
           type="button"
           onClick={swap}
           aria-label={t("swap")}
-          className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card text-card-foreground hover:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none active:scale-95"
+          className="mx-auto my-1 flex h-11 w-11 shrink-0 items-center justify-center self-center rounded-full border border-border bg-card text-card-foreground hover:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none active:scale-95 min-[520px]:mt-6 min-[520px]:mb-0"
         >
           <ArrowUpDown className="h-5 w-5" aria-hidden="true" />
         </button>
+        <div className="min-w-0">
+          <UnitSelect
+            id="to-unit"
+            label={t("toUnitLabel")}
+            value={to}
+            onChange={(u) => onUnitsChange(from, u)}
+          />
+          <p className="mt-1.5 min-h-5 text-xs text-muted-foreground">{captionOf(toUnit)}</p>
+        </div>
       </div>
 
-      {/* Result row — same grid as the source row so both align */}
-      <div className="flex flex-col items-stretch gap-2 min-[380px]:grid min-[380px]:grid-cols-[minmax(0,1fr)_auto] min-[380px]:items-center min-[380px]:gap-3">
-        {/* <output> below has an implicit role="status" — keep a single live region
-            so screen readers announce the result exactly once. The box uses
-            min-h (not h) so a long result grows the box instead of clipping. */}
-        <div className="min-w-0" aria-live="polite">
-          <p className="mb-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+      {/* Result hero card — full card width, so long values can never be
+          squeezed into a per-character wrap (production bug, 2026-09-26). */}
+      <div className="mt-4 rounded-xl border border-primary/25 bg-primary/[0.04] p-4">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
             {t("youGet")}
           </p>
-          <div
-            className={`flex min-h-16 w-full min-w-0 items-center justify-between gap-2 rounded-lg border border-primary/30 bg-primary/[0.04] px-4 font-semibold tabular-nums ${resultSizeClass} ${
-              resultText !== null ? "text-primary" : "text-muted-foreground/50"
-            }`}
-          >
-            <span aria-hidden="true" className="sr-only">
-              {t("resultLabel")}:{" "}
-            </span>
-            <output
-              htmlFor="area-input"
-              className="min-w-0 break-words leading-snug"
-            >
-              {resultText ?? t("resultPlaceholder")}
-            </output>
+          <div className="flex items-center gap-2">
+            {copied !== "idle" && (
+              <p className="text-xs font-medium text-primary" aria-hidden="true">
+                {copied === "ok" ? t("copied") : t("copyFailed")}
+              </p>
+            )}
             <button
               type="button"
               onClick={copyResult}
@@ -222,7 +235,7 @@ export default function ConverterCard({
               aria-label={
                 copied === "ok" ? t("copied") : copied === "fail" ? t("copyFailed") : t("copy")
               }
-              className="-mr-1 ml-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-card hover:text-card-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"
+              className="-mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-card hover:text-card-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"
             >
               {copied === "ok" ? (
                 <Check className="h-5 w-5 text-primary" aria-hidden="true" />
@@ -232,38 +245,35 @@ export default function ConverterCard({
             </button>
           </div>
         </div>
-        <UnitSelect
-          id="to-unit"
-          label={t("toUnitLabel")}
-          value={to}
-          onChange={(u) => onUnitsChange(from, u)}
-        />
-      </div>
-      <div className="mt-1.5 flex min-h-5 flex-wrap items-start justify-between gap-x-2 gap-y-1">
-        <p className="text-xs text-muted-foreground">{captionOf(toUnit)}</p>
-        {copied !== "idle" && (
-          <p
-            className="text-xs font-medium text-primary"
-            aria-hidden="true"
+        {/* <output> carries implicit role="status" — one live region only. */}
+        <div className="mt-1 flex min-h-12 w-full min-w-0 items-center">
+          <span aria-hidden="true" className="sr-only">
+            {t("resultLabel")}:{" "}
+          </span>
+          <output
+            htmlFor="area-input"
+            className={`min-w-0 break-words font-bold tabular-nums leading-tight ${valueSizeClass(resultText)} ${
+              resultText !== null ? "text-primary" : "text-muted-foreground/50"
+            }`}
           >
-            {copied === "ok" ? t("copied") : t("copyFailed")}
-          </p>
-        )}
-      </div>
-
-      {/* ≈-equivalent chips — quick reference scales for the current result */}
-      {chips.length > 0 && (
+            {resultText ?? t("resultPlaceholder")}
+          </output>
+        </div>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
           {chips.map((chip) => (
             <span
               key={chip.id}
-              className="inline-flex h-7 items-center rounded-full border border-border bg-background px-2.5 text-xs font-medium text-muted-foreground"
+              className={`inline-flex h-7 items-center rounded-full border px-2.5 text-xs font-medium ${
+                chip.strong
+                  ? "border-primary/30 bg-card text-primary"
+                  : "border-primary/15 bg-card text-muted-foreground"
+              }`}
             >
               {chip.text}
             </span>
           ))}
         </div>
-      )}
+      </div>
 
       {/* Reserved 20px error line — no layout shift (MASTERPLAN §6) */}
       <p

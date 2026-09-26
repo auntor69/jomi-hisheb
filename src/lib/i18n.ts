@@ -14,6 +14,9 @@ export const STRINGS = {
     title: "Jomi Hisheb — Bangladesh Land Unit Converter",
     subtitle:
       "Convert katha, bigha, chotak, shotangsho, decimal, gonda, kani, acre, square feet and square meters instantly.",
+    heroBadge1: "11 units",
+    heroBadge2: "No ads",
+    heroBadge3: "Runs in your browser",
     inputLabel: "Value",
     fromUnitLabel: "From unit",
     toUnitLabel: "To unit",
@@ -52,12 +55,12 @@ export const STRINGS = {
     faq4q: "Is this a legal measurement tool?",
     faq4a: "No. This is a calculator aid. It does not determine legal ownership, cadastral boundaries, or official survey measurements.",
     faq5q: "Does anything I type get sent anywhere?",
-    faq5a: "No. All conversion happens in your browser. Nothing is sent to any server, and there are no ads or trackers.",
+    faq5a: "No. All conversion happens in your browser and your numbers are never sent anywhere. The site counts anonymous page views with Vercel Analytics — no cookies, no personal data, no ads.",
     faq6q: "Which Kani does this use?",
     faq6a: "Bangladesh uses two Kani standards. The '20 Gonda' Kani (8-hat-nol system) is 17,280 sq ft; the '40 Shotok' Kani is 17,424 sq ft (about 0.8% larger). This tool offers both as separate units — pick the one your deed or local practice uses.",
     footerDisclaimer:
       "Uses the Bangladesh land-unit convention. Not a legal survey tool.",
-    footerTag: "Built for Bangladesh · No ads · No tracking",
+    footerTag: "Built for Bangladesh · No ads · Cookieless analytics",
     langLabel: "Language",
   },
   bn: {
@@ -66,6 +69,9 @@ export const STRINGS = {
     title: "জমির হিসাব — জমির পরিমাপ রূপান্তরক",
     subtitle:
       "কাঠা, বিঘা, ছটাক, শতাংশ, ডেসিমেল, গন্ডা, কানি, একর, বর্গফুট ও বর্গমিটার — সাথে সাথে রূপান্তর করুন।",
+    heroBadge1: "১১টি একক",
+    heroBadge2: "বিজ্ঞাপন নেই",
+    heroBadge3: "আপনার ব্রাউজারেই চলে",
     inputLabel: "মান",
     fromUnitLabel: "যে একক থেকে",
     toUnitLabel: "যে এককে",
@@ -104,11 +110,11 @@ export const STRINGS = {
     faq4q: "এটি কি আইনি পরিমাপ যন্ত্র?",
     faq4a: "না। এটি কেবল হিসাবের সহায়ক। এটি দিয়ে মালিকানা, দাগ নম্বর বা সরকারি জরিপ নির্ধারণ করা যায় না।",
     faq5q: "আমি যা লিখি তা কি কোথাও পাঠানো হয়?",
-    faq5a: "না। সব হিসাব আপনার ব্রাউজারেই হয়। কোনো সার্ভারে কিছু পাঠানো হয় না; বিজ্ঞাপন বা ট্র্যাকিংও নেই।",
+    faq5a: "না। সব হিসাব আপনার ব্রাউজারেই হয় এবং আপনার লেখা সংখ্যা কোথাও পাঠানো হয় না। সাইটে শুধু নাম-পরিচয়হীন পেজ-ভিউ গণনা করা হয় (Vercel Analytics) — কোনো কুকি, ব্যক্তিগত তথ্য বা বিজ্ঞাপন নেই।",
     faq6q: "এখানে কোন কানি ব্যবহৃত হয়?",
     faq6a: "বাংলাদেশে কানির দুটি প্রচলিত মান আছে। '২০ গন্ডা' কানি (আট-হাত নল) = ১৭,২৮০ বর্গফুট; '৪০ শতাংশ' কানি = ১৭,৪২৪ বর্গফুট (প্রায় ০.৮% বড়)। দুটোই আলাদা একক হিসেবে দেওয়া আছে — দলিল বা স্থানীয় প্রথা অনুযায়ী বেছে নিন।",
     footerDisclaimer: "বাংলাদেশের প্রচলিত জমি একক অনুযায়ী। এটি আইনি জরিপ যন্ত্র নয়।",
-    footerTag: "বাংলাদেশের জন্য নির্মিত · বিজ্ঞাপন নেই · ট্র্যাকিং নেই",
+    footerTag: "বাংলাদেশের জন্য নির্মিত · বিজ্ঞাপন নেই · কুকি-মুক্ত পরিসংখ্যান",
     langLabel: "ভাষা",
   },
 } as const;
