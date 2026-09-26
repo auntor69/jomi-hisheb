@@ -217,6 +217,20 @@ describe("SEO — robots, sitemap and manifest", () => {
     expect(robots).toContain(`Sitemap: ${DOMAIN}/sitemap.xml`);
   });
 
+  it("never Disallows a path that carries a noindex tag (noindex needs crawling)", () => {
+    // The only noindex page is 404.html. A `Disallow: /404.html` would hide it
+    // from crawlers, so they would never read its noindex meta and the URL could
+    // still surface in results. Robots.txt must stay all-Allow for that path.
+    const disallowed = [...read("public/robots.txt").matchAll(/^\s*Disallow:\s*(\S*)/gm)].map(
+      (m) => m[1],
+    );
+    expect(disallowed).toEqual([]); // the site's policy is allow-all
+
+    const notFound = read("public/404.html");
+    expect(notFound).toMatch(/name="robots" content="noindex"/); // noindex is set
+    expect(read("public/robots.txt")).not.toMatch(/Disallow:\s*\/404/);
+  });
+
   it("sitemap.xml is valid, absolute and dated (dev fallback; build regenerates it)", () => {
     const sitemap = read("public/sitemap.xml");
     expect(sitemap).toContain('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');

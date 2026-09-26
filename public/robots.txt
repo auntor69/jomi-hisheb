@@ -1,4 +1,8 @@
 User-agent: *
+# Crawl everything — including /404.html, which carries a `noindex` meta tag.
+# A Disallow here would HIDE the page from crawlers, so they would never see
+# the noindex and the URL could still appear in results. Robots.txt controls
+# crawling; meta robots controls indexing. Keep this file all-Allow.
 Allow: /
 
 Sitemap: https://jomihisheb.vercel.app/sitemap.xml
