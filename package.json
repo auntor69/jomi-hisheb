@@ -12,6 +12,7 @@
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "lucide-react": "^0.544.0"
