@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jomi-hisheb.example.com/sitemap.xml
+Sitemap: https://jomihisheb.vercel.app/sitemap.xml

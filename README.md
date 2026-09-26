@@ -72,14 +72,15 @@ Key decisions and rationale: see `MASTERPLAN.md` (§2 standards, §5 architectur
 ## Data handling
 
 - **Stored:** your language preference (`localStorage`, first-party, never transmitted).
-- **Sent:** nothing. All conversion happens in your browser. No analytics, no cookies, no third-party scripts (fonts are the only external resource, loaded with `display=swap` and safe system fallbacks).
+- **Converted:** everything, locally — your numbers never leave the browser.
+- **Sent:** anonymous, cookie-free page-view counts via Vercel Analytics (owner-installed; no personal data, no cross-site profiles, no ads). External resources: Google Fonts (`display=swap`, safe system fallbacks) and the analytics script.
 
 ## Deployment
 
-Static build (`vite build` → `dist/`); no server or environment variables required.
+Static build (`vite build` → `dist/`); no server or environment variables required. Deployed on Vercel (auto-deploys from `main`).
 
 - **Freebuff hosting (primary):** install `bun install`, build `vite build`, output `dist/`.
 - **GitHub Pages / Cloudflare Pages:** upload `dist/`; include `.nojekyll` for GitHub Pages. SPA fallback not needed (single route).
 - Social card: `public/og-image.png` (1200×630) — regenerate with `bun scripts/generate-og.mjs` after design changes.
 
-**Before going live:** replace the documented placeholder domain `https://jomi-hisheb.example.com/` in `index.html` (canonical, OG url, JSON-LD), `public/robots.txt`, and `public/sitemap.xml` with the real domain.
+**Live domain:** `https://jomihisheb.vercel.app/` — configured in `index.html` (canonical, OG url, og:image, twitter:image, JSON-LD), `public/robots.txt`, and `public/sitemap.xml`. If the domain ever changes, update those five spots.
