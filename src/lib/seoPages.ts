@@ -185,9 +185,9 @@ export function renderSeoPage(page: SeoPage): string {
     <meta property="og:title" content="${page.title}" />
     <meta property="og:description" content="${page.description}" />
     <meta property="og:url" content="${url}" />
-    <meta property="og:image" content="${DOMAIN}/og-image-v2.png" />
+    <meta property="og:image" content="${DOMAIN}/og-image-v3.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="${DOMAIN}/og-image-v2.png" />
+    <meta name="twitter:image" content="${DOMAIN}/og-image-v3.png" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
