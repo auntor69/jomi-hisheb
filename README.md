@@ -1,86 +1,159 @@
-# Jomi Hisheb — জমির হিসাব
+<div align="center">
 
-A fast, accurate, mobile-first **Bangladeshi land-unit converter**. One page, one input, instant results. No backend, no database, no accounts, no ads, no tracking.
+# জমির হিসাব · Jomi Hisheb
+
+**A fast, accurate, mobile-first land-unit converter for Bangladesh.**
+
+Convert between 11 traditional and modern land units —
+কাঠা · বিঘা · ছটাক · শতাংশ · ডেসিমেল · গন্ডা · কানি · একর · বর্গফুট · বর্গমিটার —
+instantly, in the browser, in English or বাংলা.
+
+[![CI](https://github.com/auntor69/jomi-hisheb/actions/workflows/ci.yml/badge.svg)](https://github.com/auntor69/jomi-hisheb/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2B4C9B.svg)](./LICENSE)
+[![Built with React](https://img.shields.io/badge/React-19-2B4C9B.svg)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-2B4C9B.svg)](https://www.typescriptlang.org/)
+
+[**Live app →**](https://jomihisheb.vercel.app) &nbsp;·&nbsp; [Report a bug](https://github.com/auntor69/jomi-hisheb/issues) &nbsp;·&nbsp; [Security policy](./SECURITY.md)
+
+</div>
+
+---
+
+## Why
+
+Land documents in Bangladesh mix units freely — a deed may say *"৩ কানি ৫ গন্ডা"*, a map may say *katha*, and a listing may say *decimal*. Turning those into something you can actually compare means juggling factors like `1 katha = 16 chotak = 720 sq ft` in your head, or trusting a calculator that silently picks one of two conflicting **kani** standards.
+
+Jomi Hisheb does it in one place: one input, every unit at once, both standards explicit, and no data leaving your device.
 
 ## Features
 
-- Convert instantly between **11 units**: Katha (কাঠা), Bigha (বিঘা), Chotak (ছটাক), Shotangsho (শতাংশ), Decimal (ডেসিমেল), Gonda (গন্ডা), Kani 20-Gonda (কানি), Kani 40-Shotok (কানি), Square Feet (বর্গফুট), Square Meters (বর্গমিটার), Acre (একর)
-- **All units at a glance**: a live grid converts your input into every unit simultaneously; tap a card to target that unit
-- Hero result box (never clips long values), ≈ sq ft / katha equivalents chips, one-tap clear, copy with feedback
-- Full **English / বাংলা** interface toggle (default: Bengali)
-- Swap units, quick-conversion shortcuts, shareable URLs (`?from=katha&to=decimal&value=5`)
-- Input validation (negatives, invalid numbers, overflow) with accessible, non-intrusive messages
-- WCAG 2.2 AA practices: labeled controls, keyboard operability, visible focus, `aria-live` results, reduced-motion support
+| | |
+|---|---|
+| **11 units, one input** | Type a value and see every unit update live — no pressing "convert" |
+| **All units at a glance** | A live grid shows your number in all 11 units simultaneously; tap any card to make it the target |
+| **Both Kani standards** | Ships the 20-Gonda kani (17,280 sq ft) **and** the 40-Shotok kani (17,424 sq ft) as separate, clearly labeled units |
+| **Bilingual** | Full English / বাংলা interface (Bengali by default), Western digits in both |
+| **Shareable links** | The whole calculator state lives in the URL: `?from=katha&to=decimal&value=5` |
+| **Built for phones** | The result value owns the full card width, so long numbers never wrap or clip |
+| **Accessible** | WCAG 2.2 AA practices: labeled controls, keyboard operable, visible focus, `aria-live` results, reduced-motion support |
+| **Private by design** | All conversion happens in the browser. No accounts, no ads, no tracking profiles |
 
-## Conversion standards (Bangladesh convention)
+## Conversion standards
 
-| Unit | Bangla | sq ft per unit |
-|---|---|---|
-| Square Foot | বর্গফুট | 1 |
-| Square Meter | বর্গমিটার | 10.7639104167 |
-| Katha | কাঠা | 720 |
-| Bigha | বিঘা | 14,400 (= 20 katha) |
-| Chotak | ছটাক | 45 (= katha / 16) |
-| Shotangsho | শতাংশ | 435.6 |
-| Decimal | ডেসিমেল | 435.6 |
-| Gonda | গন্ডা | 864 |
-| Kani (20 Gonda) | কানি | 17,280 (= 20 gonda, 8-hat-nol system) |
-| Kani (40 Shotok) | কানি | 17,424 (= 40 decimal) |
-| Acre | একর | 43,560 (= 100 decimal) |
+Bangladesh convention, with square feet as the canonical base.
 
-> **Two Kani standards.** Bangladesh uses both the '20 Gonda' kani (17,280 sq ft, the 8-hat-nol traditional system) and the '40 Shotok' kani (17,424 sq ft, ≈0.8% larger). This tool ships them as **separate units** — pick the one your deed or local practice uses.
+| Unit | বাংলা | sq ft per unit | Notes |
+|---|---|---|---|
+| Square Foot | বর্গফুট | 1 | base unit |
+| Square Meter | বর্গমিটার | 10.7639104167 | |
+| Katha | কাঠা | 720 | |
+| Bigha | বিঘা | 14,400 | = 20 katha |
+| Chotak | ছটাক | 45 | = katha ÷ 16 |
+| Shotangsho | শতাংশ | 435.6 | |
+| Decimal | ডেসিমেল | 435.6 | = 1 shotangsho |
+| Gonda | গন্ডা | 864 | |
+| Kani (20 Gonda) | কানি | 17,280 | traditional 8-hat-nol system |
+| Kani (40 Shotok) | কানি | 17,424 | = 40 decimal |
+| Acre | একর | 43,560 | = 100 decimal |
 
-> **Regional disclosure:** katha and bigha have different sizes in other regions and historical records (e.g. some Indian calculators use 1 katha = 1,361.25 sq ft — the Bihar standard). This tool uses the **Bangladesh convention** only.
->
-> **Not a legal tool.** Jomi Hisheb does not determine legal ownership, cadastral boundaries, or official survey measurements. Always verify against official documents.
+> **Two Kani standards.** Bangladesh uses both the *20-Gonda* kani (17,280 sq ft, the 8-hat-nol traditional system) and the *40-Shotok* kani (17,424 sq ft, ≈0.8% larger). Rather than pick one, Jomi Hisheb ships both as separate units — choose the one your deed or local practice uses.
 
-All factors live in one file: `src/data/units.ts`. Verified against independent sources (see `MASTERPLAN.md` §2).
+> **Regional disclosure.** Katha and bigha vary by region and historical record (some Indian calculators use the Bihar standard, 1 katha = 1,361.25 sq ft). This tool uses the **Bangladesh convention only**.
 
-## Run
+> **Not a legal instrument.** Jomi Hisheb does not determine ownership, cadastral boundaries, or official survey measurements. Always verify against official documents.
+
+Every factor lives in a single file — [`src/data/units.ts`](src/data/units.ts) — and is covered by a full conversion matrix in the test suite. Sourcing and rationale: [`MASTERPLAN.md`](MASTERPLAN.md) §2.
+
+## Quick start
+
+**Requirements:** [Bun](https://bun.sh) (or Node 20+ with npm/yarn/pnpm).
 
 ```bash
+git clone https://github.com/auntor69/jomi-hisheb.git
+cd jomi-hisheb
 bun install
-bun run dev        # dev server (binds 0.0.0.0:5173)
+bun run dev        # http://localhost:5173
 ```
 
-## Test & verify
-
-```bash
-bun run test       # Vitest suite (99 tests: conversion matrix, validation, formatting, i18n, URL state, UI contracts)
-bun run typecheck  # tsc, strict mode
-bun run build      # production build → dist/
-```
+| Script | Purpose |
+|---|---|
+| `bun run dev` | Vite dev server (binds `0.0.0.0:5173`) |
+| `bun run build` | Production build → `dist/` |
+| `bun run preview` | Serve the production build locally |
+| `bun run test` | Vitest suite (single run) |
+| `bun run test:watch` | Vitest in watch mode |
+| `bun run typecheck` | `tsc -b --noEmit`, strict mode |
 
 ## Architecture
 
 ```
 src/
-├── data/units.ts        # Unit registry — single source of truth (factors, names, symbols)
+├── data/units.ts          # Unit registry — single source of truth (factors, names, symbols)
 ├── lib/
-│   ├── convert.ts       # Conversion engine (sq ft canonical base; framework-free)
-│   ├── validate.ts      # Input parsing/validation (ParseOutcome)
-│   ├── format.ts        # Display + copy formatting (Intl-based)
-│   ├── share.ts         # Shareable URL state (read/serialize, debounced writes)
-│   └── i18n.ts          # EN/BN string maps (~40 keys, no i18n library)
-├── components/          # Header, ConverterCard, UnitSelect, AllUnitsGrid, QuickConversions, AboutUnits, FAQ, Footer, LangContext
-├── tests/               # Vitest suites (engine matrix, validation, formatting, i18n, URL)
-└── index.css            # Tailwind v4 tokens (indigo-blue palette, AA contrast)
+│   ├── convert.ts         # Conversion engine (sq ft canonical base; framework-free)
+│   ├── validate.ts        # Input parsing/validation (ParseOutcome)
+│   ├── format.ts          # Display + copy formatting (Intl-based, Western digits)
+│   ├── share.ts           # Shareable URL state (read/serialize, debounced writes)
+│   └── i18n.ts            # EN/BN string maps, with runtime key-parity checks
+├── components/            # Header, ConverterCard, UnitSelect, AllUnitsGrid,
+│                          # QuickConversions, AboutUnits, FAQ, Footer, LangContext
+├── tests/                 # Vitest suites (engine matrix, validation, formatting, i18n, URL, UI contracts, SEO)
+└── css / index.css        # Tailwind v4 design tokens (indigo palette, AA contrast)
 ```
 
-Key decisions and rationale: see `MASTERPLAN.md` (§2 standards, §5 architecture, §21 decisions log).
+**Design principles**
+
+- **One source of truth.** Adding a unit means editing the registry; the conversion engine, formatter, i18n, and tests all follow from it.
+- **Pure logic, thin UI.** Conversion, validation, and formatting are dependency-free modules — the React layer only renders them.
+- **No i18n library.** Two typed string maps with a runtime parity check keep the bundle small and the translations honest.
+- **Contracts are tested.** The suite asserts conversion invariants, URL round-trips, and structural UI guarantees (e.g. long results can never overflow).
+- **Tailwind tokens over ad-hoc styles.** The indigo/`#FAF9F4` palette and typography scale live in `src/index.css`.
+
+Deeper rationale and the decision log: [`MASTERPLAN.md`](MASTERPLAN.md).
 
 ## Data handling
 
 - **Stored:** your language preference (`localStorage`, first-party, never transmitted).
-- **Converted:** everything, locally — your numbers never leave the browser.
-- **Sent:** anonymous, cookie-free page-view counts via Vercel Analytics (owner-installed; no personal data, no cross-site profiles, no ads). External resources: Google Fonts (`display=swap`, safe system fallbacks) and the analytics script.
+- **Converted:** everything, locally — your measurements never leave the browser.
+- **Sent:** the static bundle, Google Fonts, and anonymous cookie-free page counts via Vercel Analytics (no personal data, no cross-site profiles, no ads). No accounts, no server-side storage.
 
 ## Deployment
 
-Static build (`vite build` → `dist/`); no server or environment variables required. Deployed on Vercel (auto-deploys from `main`).
+Static output — `vite build` produces `dist/`; no server or environment variables required.
 
-- **Freebuff hosting (primary):** install `bun install`, build `vite build`, output `dist/`.
-- **GitHub Pages / Cloudflare Pages:** upload `dist/`; include `.nojekyll` for GitHub Pages. SPA fallback not needed (single route).
-- Social card: `public/og-image.png` (1200×630) — regenerate with `bun scripts/generate-og.mjs` after design changes.
+- **Vercel (current):** auto-deploys from `main`. Live at **https://jomihisheb.vercel.app**.
+- **Netlify / Cloudflare Pages:** build `bun run build`, publish `dist/`.
+- **GitHub Pages:** publish `dist/` and add a `.nojekyll` file.
 
-**Live domain:** `https://jomihisheb.vercel.app/` — configured in `index.html` (canonical, OG url, og:image, twitter:image, JSON-LD), `public/robots.txt`, and `public/sitemap.xml`. If the domain ever changes, update those five spots.
+Generated assets are committed and reproducible:
+
+```bash
+bun scripts/generate-og.mjs       # public/og-image.png       (1200×630 social card)
+bun scripts/generate-icons.mjs    # PWA icons: 192, 512, apple-touch
+```
+
+If the domain ever changes, update it in `index.html`, `public/robots.txt`, `public/sitemap.xml`, and `public/manifest.webmanifest`.
+
+## SEO & discoverability
+
+The site ships crawlable static content inside `index.html` (hero copy, the unit table, common conversions, FAQ) so it is fully readable without JavaScript, plus:
+
+- Canonical URL, `robots` meta, Open Graph and Twitter card metadata
+- Structured data: `WebApplication`, `FAQPage`, `Organization`, `WebSite`
+- `robots.txt` and `sitemap.xml`
+- Web app manifest + installable icons
+- Descriptive page titles and headings targeting real search intent (katha ↔ decimal, bigha, kani, shotangsho conversions)
+
+## Contributing
+
+Contributions are welcome — see [**CONTRIBUTING.md**](./CONTRIBUTING.md) for ground rules, local checks, and the PR checklist. Accuracy changes must come with a cited source.
+
+Found a security issue? Please follow [**SECURITY.md**](./SECURITY.md) instead of opening a public issue.
+
+## License
+
+[MIT](./LICENSE) © [Afterclass Studio](https://github.com/auntor69)
+
+<div align="center">
+<sub>Built in Bangladesh 🇧🇩 by <a href="https://github.com/auntor69">Afterclass Studio</a>.</sub>
+</div>
