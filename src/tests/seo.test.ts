@@ -211,12 +211,13 @@ describe("SEO — robots, sitemap and manifest", () => {
     expect(robots).toContain(`Sitemap: ${DOMAIN}/sitemap.xml`);
   });
 
-  it("sitemap.xml is valid, absolute, dated and single-URL", () => {
+  it("sitemap.xml is valid, absolute and dated (dev fallback; build regenerates it)", () => {
     const sitemap = read("public/sitemap.xml");
     expect(sitemap).toContain('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
-    expect(sitemap.match(/<loc>/g)).toHaveLength(1);
     expect(sitemap).toContain(`<loc>${DOMAIN}/</loc>`);
     expect(sitemap).toMatch(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/);
+    // The build-time generator (renderSitemap) is fully covered by seoPages.test.ts;
+    // this static copy only needs to stay parseable and homepage-correct.
   });
 
   it("manifest is valid JSON with matching on-disk PNG icons", () => {
