@@ -7,6 +7,20 @@ dist/
 # Test output
 coverage/
 
+# Local environment files — never commit secrets (see SECURITY.md)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+bun-debug.log*
+
 # Editor/OS noise
 .DS_Store
 *.local
+
+# Tooling caches
+.vite/
+*.tsbuildinfo
