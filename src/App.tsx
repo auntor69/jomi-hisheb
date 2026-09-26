@@ -12,6 +12,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { LangProvider, useLang } from "./components/LangContext.tsx";
 import Header from "./components/Header.tsx";
 import ConverterCard from "./components/ConverterCard.tsx";
+import AllUnitsGrid from "./components/AllUnitsGrid.tsx";
 import QuickConversions from "./components/QuickConversions.tsx";
 import AboutUnits from "./components/AboutUnits.tsx";
 import FAQ from "./components/FAQ.tsx";
@@ -61,6 +62,14 @@ function Page() {
     [],
   );
 
+  /** AllUnitsGrid card tap: retarget the conversion (keep source + input). */
+  const handleTargetPick = useCallback(
+    (pickedTo: UnitId) => {
+      setTo((prevTo) => (pickedTo === from ? prevTo : pickedTo));
+    },
+    [from],
+  );
+
   return (
     <div className="mx-auto max-w-2xl px-4 pb-8">
       <Header />
@@ -84,6 +93,7 @@ function Page() {
         </div>
 
         <QuickConversions from={from} to={to} onPick={handlePick} />
+        <AllUnitsGrid input={input} from={from} onPick={handleTargetPick} />
         <AboutUnits />
         <FAQ />
       </main>

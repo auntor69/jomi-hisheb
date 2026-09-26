@@ -5,8 +5,10 @@ A fast, accurate, mobile-first **Bangladeshi land-unit converter**. One page, on
 ## Features
 
 - Convert instantly between **11 units**: Katha (কাঠা), Bigha (বিঘা), Chotak (ছটাক), Shotangsho (শতাংশ), Decimal (ডেসিমেল), Gonda (গন্ডা), Kani 20-Gonda (কানি), Kani 40-Shotok (কানি), Square Feet (বর্গফুট), Square Meters (বর্গমিটার), Acre (একর)
+- **All units at a glance**: a live grid converts your input into every unit simultaneously; tap a card to target that unit
+- Hero result box (never clips long values), ≈ sq ft / katha equivalents chips, one-tap clear, copy with feedback
 - Full **English / বাংলা** interface toggle (default: Bengali)
-- Swap units, copy result, quick-conversion shortcuts, shareable URLs (`?from=katha&to=decimal&value=5`)
+- Swap units, quick-conversion shortcuts, shareable URLs (`?from=katha&to=decimal&value=5`)
 - Input validation (negatives, invalid numbers, overflow) with accessible, non-intrusive messages
 - WCAG 2.2 AA practices: labeled controls, keyboard operability, visible focus, `aria-live` results, reduced-motion support
 
@@ -44,7 +46,7 @@ bun run dev        # dev server (binds 0.0.0.0:5173)
 ## Test & verify
 
 ```bash
-bun run test       # Vitest suite (71 tests: conversion matrix, validation, formatting, i18n, URL state)
+bun run test       # Vitest suite (99 tests: conversion matrix, validation, formatting, i18n, URL state, UI contracts)
 bun run typecheck  # tsc, strict mode
 bun run build      # production build → dist/
 ```
@@ -60,7 +62,7 @@ src/
 │   ├── format.ts        # Display + copy formatting (Intl-based)
 │   ├── share.ts         # Shareable URL state (read/serialize, debounced writes)
 │   └── i18n.ts          # EN/BN string maps (~40 keys, no i18n library)
-├── components/          # Header, ConverterCard, UnitSelect, QuickConversions, AboutUnits, FAQ, Footer, LangContext
+├── components/          # Header, ConverterCard, UnitSelect, AllUnitsGrid, QuickConversions, AboutUnits, FAQ, Footer, LangContext
 ├── tests/               # Vitest suites (engine matrix, validation, formatting, i18n, URL)
 └── index.css            # Tailwind v4 tokens (indigo-blue palette, AA contrast)
 ```
@@ -78,5 +80,6 @@ Static build (`vite build` → `dist/`); no server or environment variables requ
 
 - **Freebuff hosting (primary):** install `bun install`, build `vite build`, output `dist/`.
 - **GitHub Pages / Cloudflare Pages:** upload `dist/`; include `.nojekyll` for GitHub Pages. SPA fallback not needed (single route).
+- Social card: `public/og-image.png` (1200×630) — regenerate with `bun scripts/generate-og.mjs` after design changes.
 
 **Before going live:** replace the documented placeholder domain `https://jomi-hisheb.example.com/` in `index.html` (canonical, OG url, JSON-LD), `public/robots.txt`, and `public/sitemap.xml` with the real domain.

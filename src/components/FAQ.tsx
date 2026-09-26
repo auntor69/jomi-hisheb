@@ -11,6 +11,7 @@ const ITEMS: Array<{ q: StringKey; a: StringKey }> = [
   { q: "faq3q", a: "faq3a" },
   { q: "faq4q", a: "faq4a" },
   { q: "faq5q", a: "faq5a" },
+  { q: "faq6q", a: "faq6a" },
 ];
 export default function FAQ() {
   const { t } = useLang();

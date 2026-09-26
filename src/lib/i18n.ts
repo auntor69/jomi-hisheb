@@ -28,6 +28,11 @@ export const STRINGS = {
     errOverflow: "Value is too large.",
     quickTitle: "Quick conversions",
     quickAria: "Set conversion from {from} to {to}",
+    youGet: "You get",
+    allUnitsTitle: "All units at a glance",
+    allUnitsAria: "Convert to {unit} instead",
+    allUnitsSub: "Every unit updates live as you type.",
+    clearInput: "Clear input",
     aboutTitle: "About these units",
     aboutP1:
       "In the Bangladesh convention, 1 katha equals 720 square feet, and 20 katha make 1 bigha (14,400 square feet). These are the values used by this converter.",
@@ -75,6 +80,11 @@ export const STRINGS = {
     errOverflow: "মান অতিরিক্ত বড়।",
     quickTitle: "দ্রুত রূপান্তর",
     quickAria: "{from} থেকে {to} রূপান্তর নির্বাচন করুন",
+    youGet: "আপনি পাবেন",
+    allUnitsTitle: "সব একক এক নজরে",
+    allUnitsAria: "এর বদলে {unit}-এ রূপান্তর করুন",
+    allUnitsSub: "টাইপ করার সাথে সাথে প্রতিটি একক আপডেট হয়।",
+    clearInput: "মান মুছুন",
     aboutTitle: "এককগুলো সম্পর্কে",
     aboutP1:
       "বাংলাদেশের প্রচলিত হিসাবে ১ কাঠা = ৭২০ বর্গফুট এবং ২০ কাঠা = ১ বিঘা (১৪,৪০০ বর্গফুট)। এই রূপান্তরকে এই মানগুলোই ব্যবহৃত হয়।",
