@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated at build time by the conversion-pages Vite plugin (src/lib/seoPages.ts).
+     This static copy is a dev-time fallback for `vite dev`; production always
+     serves the freshly generated file with the current date and full page set. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jomihisheb.vercel.app/</loc>

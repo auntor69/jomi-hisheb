@@ -30,6 +30,7 @@ Jomi Hisheb does it in one place: one input, every unit at once, both standards 
 | | |
 |---|---|
 | **11 units, one input** | Type a value and see every unit update live — no pressing "convert" |
+| **36 conversion pages** | Static pages like [/katha-to-decimal](https://jomihisheb.vercel.app/katha-to-decimal) and [/bigha-to-katha](https://jomihisheb.vercel.app/bigha-to-katha) — exact rate, conversion table, bilingual FAQ, and a deep link that pre-fills the calculator |
 | **All units at a glance** | A live grid shows your number in all 11 units simultaneously; tap any card to make it the target |
 | **Both Kani standards** | Ships the 20-Gonda kani (17,280 sq ft) **and** the 40-Shotok kani (17,424 sq ft) as separate, clearly labeled units |
 | **Bilingual** | Full English / বাংলা interface (Bengali by default), Western digits in both |
@@ -94,6 +95,7 @@ src/
 │   ├── validate.ts        # Input parsing/validation (ParseOutcome)
 │   ├── format.ts          # Display + copy formatting (Intl-based, Western digits)
 │   ├── share.ts           # Shareable URL state (read/serialize, debounced writes)
+│   ├── seoPages.ts        # Programmatic conversion pages + sitemap generator (build-time)
 │   └── i18n.ts            # EN/BN string maps, with runtime key-parity checks
 ├── components/            # Header, ConverterCard, UnitSelect, AllUnitsGrid,
 │                          # QuickConversions, AboutUnits, FAQ, Footer, LangContext
@@ -132,15 +134,16 @@ bun scripts/generate-og.mjs       # public/og-image.png       (1200×630 social 
 bun scripts/generate-icons.mjs    # PWA icons: 192, 512, apple-touch
 ```
 
-If the domain ever changes, update it in `index.html`, `public/robots.txt`, `public/sitemap.xml`, and `public/manifest.webmanifest`.
+If the domain ever changes, update it in `index.html`, `src/lib/seoPages.ts` (the `DOMAIN` constant — feeds every conversion page and the generated sitemap), `public/robots.txt`, and `public/manifest.webmanifest`.
 
 ## SEO & discoverability
 
 The site ships crawlable static content inside `index.html` (hero copy, the unit table, common conversions, FAQ) so it is fully readable without JavaScript, plus:
 
+- **Programmatic conversion pages** — 36 static pages generated at build time from the curated pair list in `src/lib/seoPages.ts` (`/katha-to-decimal`, `/bigha-to-katha`, …), each with unique title/description/canonical, the exact rate, a conversion table verified against the registry, bilingual FAQ schema, and a deep link that opens the calculator pre-filled. Extend the `PAIRS` list to add pages.
 - Canonical URL, `robots` meta, Open Graph and Twitter card metadata
-- Structured data: `WebApplication`, `FAQPage`, `Organization`, `WebSite`
-- `robots.txt` and `sitemap.xml`
+- Structured data: `WebApplication`, `FAQPage`, `Organization`, `WebSite` (+ per-page `WebPage`/`FAQPage`)
+- `robots.txt` and a build-generated `sitemap.xml` (homepage + all conversion pages)
 - Web app manifest + installable icons
 - Descriptive page titles and headings targeting real search intent (katha ↔ decimal, bigha, kani, shotangsho conversions)
 
