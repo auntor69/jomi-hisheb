@@ -15,22 +15,48 @@ export const FONT = {
   C: [".XXXX", "X....", "X....", "X....", "X....", "X....", ".XXXX"],
   D: ["XXXX.", "X...X", "X...X", "X...X", "X...X", "X...X", "XXXX."],
   E: ["XXXXX", "X....", "X....", "XXXX.", "X....", "X....", "XXXXX"],
+  F: ["XXXXX", "X....", "X....", "XXXX.", "X....", "X....", "X...."],
   G: [".XXXX", "X....", "X....", "X..XX", "X...X", "X...X", ".XXXX"],
   H: ["X...X", "X...X", "X...X", "XXXXX", "X...X", "X...X", "X...X"],
   I: ["XXXXX", "..X..", "..X..", "..X..", "..X..", "..X..", "XXXXX"],
+  J: ["..XXX", "...X.", "...X.", "...X.", "...X.", "X..X.", ".XX.."],
   K: ["X...X", "X..X.", "X.X..", "XX...", "X.X..", "X..X.", "X...X"],
   L: ["X....", "X....", "X....", "X....", "X....", "X....", "XXXXX"],
   M: ["X...X", "XX.XX", "X.X.X", "X.X.X", "X...X", "X...X", "X...X"],
   N: ["X...X", "XX..X", "X.X.X", "X..XX", "X...X", "X...X", "X...X"],
   O: [".XXX.", "X...X", "X...X", "X...X", "X...X", "X...X", ".XXX."],
+  P: ["XXXX.", "X...X", "X...X", "XXXX.", "X....", "X....", "X...."],
+  Q: [".XXX.", "X...X", "X...X", "X...X", "X.X.X", "X..X.", ".XX.X"],
   R: ["XXXX.", "X...X", "X...X", "XXXX.", "X.X..", "X..X.", "X...X"],
   S: [".XXXX", "X....", "X....", ".XXX.", "....X", "....X", "XXXX."],
   T: ["XXXXX", "..X..", "..X..", "..X..", "..X..", "..X..", "..X.."],
   U: ["X...X", "X...X", "X...X", "X...X", "X...X", "X...X", ".XXX."],
   V: ["X...X", "X...X", "X...X", "X...X", "X...X", ".X.X.", "..X.."],
+  W: ["X...X", "X...X", "X...X", "X.X.X", "X.X.X", "XX.XX", "X...X"],
+  X: ["X...X", "X...X", ".X.X.", "..X..", ".X.X.", "X...X", "X...X"],
+  Y: ["X...X", "X...X", ".X.X.", "..X..", "..X..", "..X..", "..X.."],
+  Z: ["XXXXX", "....X", "...X.", "..X..", ".X...", "X....", "XXXXX"],
+  "0": [".XXX.", "X...X", "X..XX", "X.X.X", "XX..X", "X...X", ".XXX."],
   "1": ["..X..", ".XX..", "..X..", "..X..", "..X..", "..X..", "XXXXX"],
+  "2": [".XXX.", "X...X", "....X", "...X.", "..X..", ".X...", "XXXXX"],
+  "3": ["XXXX.", "....X", "....X", ".XXX.", "....X", "....X", "XXXX."],
+  "4": ["...X.", "..XX.", ".X.X.", "X..X.", "XXXXX", "...X.", "...X."],
+  "5": ["XXXXX", "X....", "X....", "XXXX.", "....X", "....X", "XXXX."],
+  "6": [".XXX.", "X....", "X....", "XXXX.", "X...X", "X...X", ".XXX."],
+  "7": ["XXXXX", "....X", "...X.", "..X..", ".X...", ".X...", ".X..."],
+  "8": [".XXX.", "X...X", "X...X", ".XXX.", "X...X", "X...X", ".XXX."],
+  "9": [".XXX.", "X...X", "X...X", ".XXXX", "....X", "....X", ".XXX."],
   "-": [".....", ".....", ".....", "XXXXX", ".....", ".....", "....."],
   ".": [".....", ".....", ".....", ".....", ".....", ".XX..", ".XX.."],
+  ",": [".....", ".....", ".....", ".....", ".XX..", ".XX..", "XX..."],
+  ":": [".....", ".XX..", ".XX..", ".....", ".XX..", ".XX..", "....."],
+  "!": ["..X..", "..X..", "..X..", "..X..", "..X..", ".....", "..X.."],
+  "?": [".XXX.", "X...X", "....X", "...X.", "..X..", ".....", "..X.."],
+  "/": ["....X", "....X", "...X.", "..X..", ".X...", "X....", "X...."],
+  "(": ["...X.", "..X..", ".X...", ".X...", ".X...", "..X..", "...X."],
+  ")": [".X...", "..X..", "...X.", "...X.", "...X.", "..X..", ".X..."],
+  "+": [".....", "..X..", "..X..", "XXXXX", "..X..", "..X..", "....."],
+  "=": [".....", ".....", "XXXXX", ".....", "XXXXX", ".....", "....."],
   " ": [".....", ".....", ".....", ".....", ".....", ".....", "....."],
 };
 
@@ -92,7 +118,15 @@ export function createCanvas(width, height, fill = [0, 0, 0]) {
   const drawText = (x, y, text, scale, color) => {
     let cx = x;
     for (const ch of text) {
-      const glyph = FONT[ch] ?? FONT[" "];
+      const glyph = FONT[ch];
+      // Fail loud. This used to fall back to the blank-space glyph, which
+      // silently shipped the wordmark as "OMI HISHEB" (J was missing from FONT).
+      if (!glyph) {
+        throw new Error(
+          `FONT has no glyph for ${JSON.stringify(ch)} (in ${JSON.stringify(text)}). ` +
+            `Add it to scripts/lib/png.mjs — a missing glyph must never render as blank.`,
+        );
+      }
       for (let ry = 0; ry < 7; ry++) {
         for (let rx = 0; rx < 5; rx++) {
           if (glyph[ry][rx] === "X") fillRect(cx + rx * scale, y + ry * scale, scale, scale, color);
